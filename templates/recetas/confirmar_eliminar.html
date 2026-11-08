@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Receta{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'receta_lista' %}" style="color: inherit;">Recetas</a> / Eliminar Receta
+{% endblock %}
+
+{% block content %}
+<div class="delete-confirmation-card">
+    <div class="delete-icon-badge">
+        <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+    </div>
+    
+    <h2 class="delete-card-title">¿Desea eliminar esta Receta?</h2>
+    <p class="delete-card-subtitle">
+        Está a punto de revocar y eliminar del historial la siguiente prescripción farmacológica:
+    </p>
+
+    <div class="delete-item-summary">
+        <div class="delete-summary-row">
+            <span class="delete-summary-label">Receta ID</span>
+            <span class="delete-summary-val">#{{ receta.id }}</span>
+        </div>
+        <div class="delete-summary-row">
+            <span class="delete-summary-label">Medicamento</span>
+            <span class="delete-summary-val">{{ receta.medicamento }}</span>
+        </div>
+        <div class="delete-summary-row">
+            <span class="delete-summary-label">Posología</span>
+            <span class="delete-summary-val">{{ receta.dosis }} &bull; {{ receta.frecuencia }}</span>
+        </div>
+        <div class="delete-summary-row">
+            <span class="delete-summary-label">Paciente</span>
+            <span class="delete-summary-val">{{ receta.diagnostico.cita.paciente.nombre_completo }}</span>
+        </div>
+        <div class="delete-summary-row">
+            <span class="delete-summary-label">Odontólogo Emisor</span>
+            <span class="delete-summary-val">{{ receta.diagnostico.cita.odontologo.nombre_completo }}</span>
+        </div>
+    </div>
+
+    <form method="post" class="delete-actions-footer">
+        {% csrf_token %}
+        <a href="{% url 'receta_lista' %}" class="btn btn-secondary">Regresar</a>
+        <button type="submit" class="btn btn-delete-confirm">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            <span>Confirmar y Eliminar</span>
+        </button>
+    </form>
+</div>
+{% endblock %}

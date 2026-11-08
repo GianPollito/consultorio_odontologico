@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Centro de Reportes Odontológicos{% endblock %}
+{% block breadcrumb %}Centro de Reportes{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 2rem;">
+    <div class="header-title-container">
+        <div class="header-icon-badge">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
+        <div>
+            <h2 class="card-title">Centro de Reportes Clínicos y Administrativos</h2>
+            <div class="card-subtitle">Genere reportes oficiales filtrables con membrete clínico institucional, listos para exportación e impresión directa en PDF</div>
+        </div>
+    </div>
+</div>
+
+<!-- GRID DE REPORTES (CITAS, DIAGNÓSTICOS, TRATAMIENTOS, RECETAS) -->
+<div class="form-grid-2">
+    <!-- Reporte 01: Citas -->
+    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-radius: 20px;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem;">
+                <div style="width: 48px; height: 48px; border-radius: 14px; background: #FFFBEB; border: 1px solid #FDE68A; display: flex; align-items: center; justify-content: center; color: #D97706; flex-shrink: 0;">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.12rem; color: var(--text-main); font-weight: 700; margin: 0;">Reporte de Citas Odontológicas</h3>
+                    <span class="badge" style="background: #FFFBEB; color: #92400E; border: 1px solid #FDE68A; margin-top: 0.25rem; font-size: 0.76rem; font-weight: 700;">
+                        {{ total_citas }} citas registradas
+                    </span>
+                </div>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 1.5rem;">
+                Filtre las citas por rango de fechas (desde / hasta), odontólogo especialista asignado y estado clínico (Pendiente, Confirmada, Atendida, Cancelada).
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.65rem; padding-top: 1rem; border-top: 1px solid var(--border-light, #EAEFEA);">
+            <a href="{% url 'reporte_citas' %}" class="btn btn-primary" style="flex: 1;">Abrir y Filtrar</a>
+            <a href="{% url 'reporte_citas' %}?imprimir=1" target="_blank" class="btn btn-outline" title="Vista previa de impresión y PDF">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <span>Imprimir / PDF</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Reporte 02: Diagnósticos -->
+    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-radius: 20px;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem;">
+                <div style="width: 48px; height: 48px; border-radius: 14px; background: #EDF9F5; border: 1px solid #D5F1E5; display: flex; align-items: center; justify-content: center; color: #103F3D; flex-shrink: 0;">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.12rem; color: var(--text-main); font-weight: 700; margin: 0;">Reporte de Diagnósticos Clínicos</h3>
+                    <span class="badge" style="background: #EDF9F5; color: #103F3D; border: 1px solid #93EBC6; margin-top: 0.25rem; font-size: 0.76rem; font-weight: 700;">
+                        {{ total_diagnosticos }} diagnósticos emitidos
+                    </span>
+                </div>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 1.5rem;">
+                Consulta consolidada de diagnósticos y recomendaciones clínicas emitidas, filtradas por rango temporal, odontólogo tratante y paciente.
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.65rem; padding-top: 1rem; border-top: 1px solid var(--border-light, #EAEFEA);">
+            <a href="{% url 'reporte_diagnosticos' %}" class="btn btn-primary" style="flex: 1;">Abrir y Filtrar</a>
+            <a href="{% url 'reporte_diagnosticos' %}?imprimir=1" target="_blank" class="btn btn-outline" title="Vista previa de impresión y PDF">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <span>Imprimir / PDF</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Reporte 03: Tratamientos -->
+    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-radius: 20px;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem;">
+                <div style="width: 48px; height: 48px; border-radius: 14px; background: #F0FDF4; border: 1px solid #DCFCE7; display: flex; align-items: center; justify-content: center; color: #059669; flex-shrink: 0;">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.12rem; color: var(--text-main); font-weight: 700; margin: 0;">Reporte de Tratamientos y Costos</h3>
+                    <span class="badge" style="background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; margin-top: 0.25rem; font-size: 0.76rem; font-weight: 700;">
+                        {{ total_tratamientos }} planes terapéuticos
+                    </span>
+                </div>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 1.5rem;">
+                Detalle presupuestario y operativo de procedimientos odontológicos, con desglose de montos en Soles (S/.), estados de avance y fechas.
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.65rem; padding-top: 1rem; border-top: 1px solid var(--border-light, #EAEFEA);">
+            <a href="{% url 'reporte_tratamientos' %}" class="btn btn-primary" style="flex: 1;">Abrir y Filtrar</a>
+            <a href="{% url 'reporte_tratamientos' %}?imprimir=1" target="_blank" class="btn btn-outline" title="Vista previa de impresión y PDF">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <span>Imprimir / PDF</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Reporte 04: Recetas -->
+    <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; border-radius: 20px;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 0.85rem; margin-bottom: 1rem;">
+                <div style="width: 48px; height: 48px; border-radius: 14px; background: #E6F4F1; border: 1px solid #CCEDE5; display: flex; align-items: center; justify-content: center; color: #0D9488; flex-shrink: 0;">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.5 20.5 4 14l10-10a4.95 4.95 0 1 1 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.12rem; color: var(--text-main); font-weight: 700; margin: 0;">Reporte de Recetas y Prescripciones</h3>
+                    <span class="badge" style="background: #E6F4F1; color: #0F766E; border: 1px solid #99F6E4; margin-top: 0.25rem; font-size: 0.76rem; font-weight: 700;">
+                        {{ total_recetas }} recetas farmacológicas
+                    </span>
+                </div>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 1.5rem;">
+                Registro farmacológico de medicamentos indicados, posologías, frecuencia de administración y duración del tratamiento por paciente.
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.65rem; padding-top: 1rem; border-top: 1px solid var(--border-light, #EAEFEA);">
+            <a href="{% url 'reporte_recetas' %}" class="btn btn-primary" style="flex: 1;">Abrir y Filtrar</a>
+            <a href="{% url 'reporte_recetas' %}?imprimir=1" target="_blank" class="btn btn-outline" title="Vista previa de impresión y PDF">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <span>Imprimir / PDF</span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

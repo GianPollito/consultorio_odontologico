@@ -1,0 +1,677 @@
+/* ==========================================================================
+   05. MÓDULO DE AUTENTICACIÓN: RÉPLICA EXACTA DEL UI KIT DENTAL DE FIGMA
+   Basado fielmente en las capturas del diseño: ToothTrackr / Dental Clinic UI Kit
+   Archivo: static/css/auth.css
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   CUERPO Y FONDO SERENO
+   -------------------------------------------------------------------------- */
+.tooth-auth-body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: #F4F6F5; /* Tono de fondo exacto del diseño en Figma */
+    font-family: var(--font-base);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+}
+
+.tooth-viewport-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1rem 0.65rem 1rem;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Espaciador superior simétrico para mantener la tarjeta centrada y pie fijado abajo */
+.tooth-viewport-spacer-top {
+    flex: 1 1 0;
+    min-height: 0.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   TARJETA FLOTANTE BLANCA CON RADIO DE 24PX ELEGANTE (ALTURA BALANCEADA)
+   -------------------------------------------------------------------------- */
+.tooth-auth-card {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 420px;
+    background: #FFFFFF;
+    border-radius: 26px; /* Curvatura característica del diseño de Figma */
+    border: 1px solid #EAEFEA;
+    box-shadow: 0 16px 36px -12px rgba(16, 63, 61, 0.08), 0 2px 6px rgba(0, 0, 0, 0.02);
+    padding: 2.25rem 2.25rem 1.85rem 2.25rem;
+    box-sizing: border-box;
+    text-align: center;
+    position: relative;
+}
+
+.tooth-auth-card.card-wide {
+    max-width: 510px;
+    padding: 2.15rem 2.35rem 1.85rem 2.35rem;
+    border-radius: 26px;
+}
+
+/* Espaciados específicos para la tarjeta de registro (altura incrementada armónicamente) */
+.card-wide .tooth-logo-wrapper {
+    margin-bottom: 0.85rem;
+}
+
+.card-wide .tooth-svg-emblem {
+    width: 42px;
+    height: 42px;
+}
+
+.card-wide .tooth-card-header {
+    margin-bottom: 1.15rem;
+}
+
+.card-wide .tooth-serif-title {
+    font-size: 1.85rem;
+    margin-bottom: 0.25rem;
+    line-height: 1.15;
+}
+
+.card-wide .tooth-sans-subtitle {
+    font-size: 0.84rem;
+    line-height: 1.35;
+}
+
+.card-wide .tooth-stepper {
+    margin-bottom: 1.15rem;
+    gap: 0.7rem;
+}
+
+.card-wide .step-item {
+    font-size: 0.8rem;
+}
+
+.card-wide .step-number {
+    width: 22px;
+    height: 22px;
+    font-size: 0.72rem;
+}
+
+.card-wide .step-line {
+    width: 32px;
+}
+
+.card-wide .tooth-input-group {
+    margin-bottom: 0.88rem;
+}
+
+.card-wide .tooth-label {
+    font-size: 0.8rem;
+    margin-bottom: 0.35rem;
+}
+
+.card-wide .tooth-field-box input {
+    height: 44px;
+    font-size: 0.9rem;
+    border-radius: 11px;
+}
+
+.card-wide .btn-tooth-submit {
+    height: 45px;
+    font-size: 0.92rem;
+    border-radius: 11px;
+}
+
+/* Emblema Odontológico Superior */
+.tooth-logo-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.95rem;
+}
+
+.tooth-svg-emblem {
+    width: 42px;
+    height: 42px;
+    filter: drop-shadow(0 2px 4px rgba(16, 63, 61, 0.1));
+}
+
+/* --------------------------------------------------------------------------
+   TIPOGRAFÍA EDITORIAL SERIF DE LUJO (FIGMA HEADINGS)
+   -------------------------------------------------------------------------- */
+.tooth-card-header {
+    margin-bottom: 1.45rem;
+    text-align: center;
+}
+
+.tooth-serif-title {
+    font-family: 'Playfair Display', 'DM Serif Display', Georgia, serif;
+    font-size: 2rem;
+    font-weight: 400; /* Serif con contraste elegante fino-grueso */
+    letter-spacing: -0.015em;
+    color: #102B27;
+    line-height: 1.15;
+    margin-bottom: 0.35rem;
+}
+
+.tooth-sans-subtitle {
+    font-family: var(--font-base);
+    font-size: 0.85rem;
+    color: #5A716A;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   STEPPER DE REGISTRO
+   -------------------------------------------------------------------------- */
+.tooth-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    margin-bottom: 0.95rem;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #8FA39D;
+}
+
+.step-item.active {
+    color: #103F3D;
+}
+
+.step-number {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #E5EDE9;
+    color: #5A716A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.step-item.active .step-number {
+    background: #103F3D;
+    color: #FFFFFF;
+}
+
+.step-line {
+    width: 28px;
+    height: 1px;
+    background: #D5E0DC;
+}
+
+/* --------------------------------------------------------------------------
+   ALERTAS
+   -------------------------------------------------------------------------- */
+.tooth-messages-wrapper {
+    margin-bottom: 0.75rem;
+    margin-top: 0.25rem;
+    width: 100%;
+    animation: toothFadeIn 0.25s ease-out;
+}
+
+@keyframes toothFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tooth-alert {
+    padding: 0.6rem 0.85rem;
+    border-radius: 9px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1.35;
+    text-align: center;
+    border: 1px solid transparent;
+    box-sizing: border-box;
+}
+
+.tooth-alert-info, .tooth-alert-success {
+    background: #EDF9F5;
+    color: #103F3D;
+    border-color: #BDE8DC;
+}
+
+.tooth-alert-error, .tooth-alert-danger {
+    background: #FEF2F2;
+    color: #B91C1C;
+    border-color: #FECACA;
+}
+
+.alert-content {
+    display: block;
+    width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   FORMULARIO Y CAMPOS CON BORDE DE 10PX COMPACTOS
+   -------------------------------------------------------------------------- */
+.tooth-form {
+    width: 100%;
+    text-align: left;
+}
+
+.tooth-input-group {
+    margin-bottom: 0.88rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.tooth-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+.tooth-label {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1E3831;
+    margin-bottom: 0.35rem;
+    letter-spacing: -0.01em;
+}
+
+.required-dot {
+    color: #EF4444;
+}
+
+/* Contenedor del Input */
+.tooth-field-box {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.field-leading-icon {
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #708780;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.field-leading-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Estilo exacto de las cajas de texto de Figma */
+.tooth-field-box input {
+    width: 100%;
+    height: 44px;
+    border: 1.5px solid #D5E0DC;
+    border-radius: 11px; /* Radio de curvatura Figma */
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: #102B27;
+    background-color: #FFFFFF;
+    outline: none;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+    padding: 0 0.85rem 0 2.5rem !important; /* Sangría fija para no superponer icono */
+}
+
+/* Inputs sin icono (ej. nombres y apellidos en 2 columnas) */
+.tooth-field-box.no-icon input {
+    padding: 0 0.85rem !important;
+}
+
+/* Cuando tiene botón de revelar contraseña a la derecha */
+.tooth-field-box.with-action input {
+    padding-right: 2.5rem !important;
+}
+
+.tooth-field-box input:hover {
+    border-color: #A6BEB6;
+}
+
+/* Foco exacto de Figma: borde #438983 con halo difuso */
+.tooth-field-box input:focus {
+    border-color: #438983;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(67, 137, 131, 0.18);
+}
+
+.tooth-field-box:focus-within .field-leading-icon {
+    color: #438983;
+}
+
+/* Estado de error / campos faltantes en rojo */
+.tooth-field-box.has-error input {
+    border-color: #EF4444 !important;
+    background-color: #FEF2F2 !important;
+}
+
+.tooth-field-box.has-error input:focus {
+    border-color: #DC2626 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.22) !important;
+}
+
+.tooth-field-box.has-error .field-leading-icon {
+    color: #EF4444 !important;
+}
+
+/* Neutralizar color azul de autocompletado en navegadores */
+.tooth-field-box input:-webkit-autofill,
+.tooth-field-box input:-webkit-autofill:hover, 
+.tooth-field-box input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 40px #FFFFFF inset !important;
+    -webkit-text-fill-color: #102B27 !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Botón de alternar ver/ocultar contraseña */
+.field-trailing-btn {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #708780;
+    cursor: pointer;
+    padding: 0.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    transition: color 0.15s ease;
+}
+
+.field-trailing-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.field-trailing-btn:hover {
+    color: #102B27;
+}
+
+.tooth-field-error {
+    font-size: 0.75rem;
+    color: #DC2626;
+    font-weight: 500;
+    margin-top: 0.25rem;
+}
+
+/* Fila de opciones: Checkbox y Olvidé contraseña */
+.tooth-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0.8rem 0 1.25rem 0;
+}
+
+.tooth-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #102B27;
+    user-select: none;
+}
+
+.tooth-checkbox-label input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    border-radius: 4px;
+    border: 1.5px solid #A6BEB6;
+    accent-color: #103F3D;
+    cursor: pointer;
+    margin: 0;
+}
+
+.tooth-meta-note {
+    font-size: 0.78rem;
+    color: #5A716A;
+    font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   BOTÓN PRINCIPAL EN VERDE PINO OSCURO #103F3D
+   -------------------------------------------------------------------------- */
+.btn-tooth-submit {
+    width: 100%;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    background-color: #103F3D; /* Color exacto del botón de Figma */
+    color: #FFFFFF;
+    font-size: 0.92rem;
+    font-weight: 600;
+    border-radius: 11px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(16, 63, 61, 0.2);
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-tooth-submit:hover {
+    background-color: #0B2F2E;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(16, 63, 61, 0.28);
+}
+
+.btn-tooth-submit:active {
+    transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   DIVIDER Y PIE DE TARJETA
+   -------------------------------------------------------------------------- */
+.tooth-divider {
+    position: relative;
+    text-align: center;
+    margin: 1.15rem 0 0.95rem 0;
+}
+
+.tooth-divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #E5EDE9;
+}
+
+.tooth-divider span {
+    position: relative;
+    background: #FFFFFF;
+    padding: 0 0.8rem;
+    font-size: 0.78rem;
+    color: #8FA39D;
+    text-transform: lowercase;
+}
+
+.tooth-switch-section {
+    font-size: 0.85rem;
+    color: #5A716A;
+}
+
+.tooth-switch-link {
+    font-weight: 700;
+    color: #103F3D;
+    text-decoration: none;
+    margin-left: 0.35rem;
+    transition: color 0.15s ease;
+}
+
+.tooth-switch-link:hover {
+    color: #438983;
+    text-decoration: underline;
+}
+
+.password-hints-row {
+    display: flex;
+    gap: 0.65rem;
+    font-size: 0.72rem;
+    color: #708780;
+    margin-top: 0.35rem;
+}
+
+/* --------------------------------------------------------------------------
+   PIE DE PÁGINA INFERIOR FUERA DE LA TARJETA (ESTRICTAMENTE AL FONDO)
+   -------------------------------------------------------------------------- */
+.tooth-auth-page-footer {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 0.35rem;
+    margin-top: 0.5rem;
+    gap: 0.25rem;
+    text-align: center;
+}
+
+.security-shield-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.74rem;
+    color: #5A716A;
+}
+
+.security-shield-badge svg {
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+}
+
+.copyright-line {
+    font-size: 0.7rem;
+    color: #8FA39D;
+    margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   COMPACTACIÓN EXTRA PARA PANTALLAS CON ALTURA REDUCIDA (CERO SCROLL)
+   -------------------------------------------------------------------------- */
+@media (max-height: 720px) {
+    .tooth-viewport-container {
+        padding: 0.5rem 1rem 0.35rem 1rem;
+    }
+
+    .tooth-viewport-spacer-top {
+        min-height: 0.25rem;
+    }
+
+    .tooth-auth-card {
+        padding: 1.15rem 1.65rem 0.95rem 1.65rem;
+        border-radius: 18px;
+    }
+
+    .tooth-auth-card.card-wide {
+        padding: 0.95rem 1.45rem 0.8rem 1.45rem;
+        border-radius: 18px;
+    }
+
+    .tooth-logo-wrapper {
+        margin-bottom: 0.3rem;
+    }
+
+    .tooth-svg-emblem {
+        width: 28px;
+        height: 28px;
+    }
+
+    .tooth-card-header {
+        margin-bottom: 0.45rem;
+    }
+
+    .tooth-serif-title {
+        font-size: 1.45rem;
+        margin-bottom: 0.1rem;
+    }
+
+    .tooth-sans-subtitle {
+        font-size: 0.74rem;
+    }
+
+    .tooth-stepper {
+        margin-bottom: 0.45rem;
+    }
+
+    .tooth-input-group {
+        margin-bottom: 0.4rem;
+    }
+
+    .tooth-field-box input {
+        height: 36px;
+    }
+
+    .tooth-meta-row {
+        margin: 0.35rem 0 0.65rem 0;
+    }
+
+    .btn-tooth-submit {
+        height: 36px;
+    }
+
+    .tooth-divider {
+        margin: 0.5rem 0 0.4rem 0;
+    }
+
+    .tooth-auth-page-footer {
+        padding-bottom: 0.2rem;
+        margin-top: 0.35rem;
+        gap: 0.15rem;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE DESIGN (MÓVIL)
+   -------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+    .tooth-viewport-container {
+        padding: 1rem 0.75rem;
+    }
+
+    .tooth-auth-card {
+        padding: 1.5rem 1.25rem 1.25rem 1.25rem;
+        border-radius: 20px;
+    }
+
+    .tooth-serif-title {
+        font-size: 1.65rem;
+    }
+
+    .tooth-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}

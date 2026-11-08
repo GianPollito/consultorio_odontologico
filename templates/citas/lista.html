@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}Agenda de Citas Odontológicas{% endblock %}
+{% block breadcrumb %}Citas Odontológicas{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div>
+                <h2 class="card-title">Agenda y Control de Citas</h2>
+                <div class="card-subtitle">Programación de atenciones odontológicas &bull; {{ total_registros }} citas registradas</div>
+            </div>
+        </div>
+        <a href="{% url 'cita_crear' %}" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Programar Cita</span>
+        </a>
+    </div>
+
+    <!-- Barra de Filtros -->
+    <div class="filter-bar">
+        <form method="get" action="{% url 'cita_lista' %}" style="display: flex; gap: 0.75rem; flex-wrap: wrap; width: 100%; align-items: center;">
+            <div class="search-box-inner" style="flex: 1; min-width: 240px;">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" name="q" value="{{ query }}" placeholder="Buscar por paciente, DNI, odontólogo o motivo..." class="form-input">
+            </div>
+            
+            <input type="date" name="fecha" value="{{ fecha_filtro }}" class="form-input" style="max-width: 170px;" title="Filtrar por fecha">
+            
+            <select name="estado" class="form-select" style="max-width: 160px;">
+                <option value="">Todos los Estados</option>
+                <option value="Pendiente" {% if estado_filtro == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                <option value="Confirmada" {% if estado_filtro == 'Confirmada' %}selected{% endif %}>Confirmada</option>
+                <option value="Atendida" {% if estado_filtro == 'Atendida' %}selected{% endif %}>Atendida</option>
+                <option value="Cancelada" {% if estado_filtro == 'Cancelada' %}selected{% endif %}>Cancelada</option>
+            </select>
+
+            <select name="odontologo" class="form-select" style="max-width: 220px;">
+                <option value="">Todos los Odontólogos</option>
+                {% for o in odontologos %}
+                <option value="{{ o.id }}" {% if odontologo_id == o.id|stringformat:"s" %}selected{% endif %}>Dr(a). {{ o.nombre_completo }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn btn-secondary">Filtrar</button>
+            {% if query or fecha_filtro or estado_filtro or odontologo_id %}
+            <a href="{% url 'cita_lista' %}" class="btn btn-outline" title="Limpiar filtros">Limpiar</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Tabla de Citas -->
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th style="width: 140px;">Fecha y Hora</th>
+                    <th style="min-width: 200px;">Paciente</th>
+                    <th style="min-width: 180px;">Odontólogo Tratante</th>
+                    <th>Motivo de Consulta</th>
+                    <th style="width: 130px;">Estado</th>
+                    <th style="text-align: right; width: 140px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in page_obj %}
+                <tr>
+                    <td>
+                        <div class="schedule-cell">
+                            <span class="schedule-date">{{ c.fecha|date:"d/m/Y" }}</span>
+                            <span class="schedule-time-pill">
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                {{ c.hora|time:"H:i" }} hrs
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="patient-cell-group">
+                            <div class="table-avatar-circle">
+                                {{ c.paciente.nombres|make_list|first|upper }}{{ c.paciente.apellidos|make_list|first|upper }}
+                            </div>
+                            <div class="patient-cell-details">
+                                <a href="{% url 'paciente_detalle' c.paciente.pk %}" class="table-link-highlight">
+                                    {{ c.paciente.nombre_completo }}
+                                </a>
+                                <span class="patient-cell-sub">DNI: {{ c.paciente.dni }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="doctor-cell-group">
+                            <strong style="color: var(--text-main); font-size: 0.88rem;">Dr(a). {{ c.odontologo.nombre_completo }}</strong>
+                            <span class="doctor-spec-tag">{{ c.odontologo.especialidad.nombre }}</span>
+                        </div>
+                    </td>
+                    <td><span style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.45;">{{ c.motivo }}</span></td>
+                    <td>
+                        {% if c.estado == 'Atendida' %}
+                            <span class="badge badge-atendida">{{ c.estado }}</span>
+                        {% elif c.estado == 'Confirmada' %}
+                            <span class="badge badge-confirmada">{{ c.estado }}</span>
+                        {% elif c.estado == 'Pendiente' %}
+                            <span class="badge badge-pendiente">{{ c.estado }}</span>
+                        {% else %}
+                            <span class="badge badge-cancelada">{{ c.estado }}</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="table-actions-cluster">
+                            {% if c.estado != 'Atendida' and c.estado != 'Cancelada' %}
+                            <a href="{% url 'diagnostico_crear' %}?cita={{ c.pk }}" class="btn btn-primary btn-sm" style="padding: 0.35rem 0.75rem; font-size: 0.78rem;" title="Atender y Emitir Diagnóstico">
+                                Atender
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'cita_editar' c.pk %}" class="btn-action-round" title="Editar Cita">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </a>
+                            <a href="{% url 'cita_eliminar' c.pk %}" class="btn-action-round btn-action-danger" title="Eliminar Cita">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state-cell">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <p>No se encontraron citas programadas con los criterios seleccionados.</p>
+                            <a href="{% url 'cita_crear' %}" class="btn btn-primary btn-sm">+ Programar Cita</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        <div>Mostrando página <strong>{{ page_obj.number }}</strong> de {{ page_obj.paginator.num_pages }}</div>
+        <div class="pagination-controls">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if fecha_filtro %}&fecha={{ fecha_filtro }}{% endif %}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}{% if odontologo_id %}&odontologo={{ odontologo_id }}{% endif %}" class="btn btn-outline btn-sm">&laquo; Anterior</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if fecha_filtro %}&fecha={{ fecha_filtro }}{% endif %}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}{% if odontologo_id %}&odontologo={{ odontologo_id }}{% endif %}" class="btn btn-outline btn-sm">Siguiente &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

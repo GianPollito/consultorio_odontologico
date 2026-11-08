@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Panel de Control{% endblock %} - {{ CLINIC_NAME }}</title>
+    <!-- Tipografías de Google Fonts: Serif Editorial de Lujo (DM Serif / Playfair) y Sans-serif pulcra (Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Estilos CSS Personalizados Propios (Sin Bootstrap - Figma ToothTrackr UI Kit) -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}?v=30">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- SIDEBAR NAVEGACIÓN -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="{% url 'dashboard' %}" class="sidebar-brand-link">
+                    <div class="sidebar-logo-icon">
+                        <!-- Emblema Odontológico Original de Figma: Diente Verde Pino #103F3D con Punto Menta #93EBC6 -->
+                        <svg viewBox="0 0 48 48" width="34" height="34" fill="none" class="tooth-svg-emblem">
+                            <path d="M14 9C10.5 11 7 15 7 21C7 28 9.5 35 12.5 41C14 44 16.5 44 17.5 41C19 36 20.5 31.5 24 31.5C27.5 31.5 29 36 30.5 41C31.5 44 34 44 35.5 41C38.5 35 41 28 41 21C41 15 37.5 11 34 9C30.5 7 27.5 8 24 8C20.5 8 17.5 7 14 9Z" fill="#103F3D"/>
+                            <circle cx="34.5" cy="11.5" r="4.5" fill="#93EBC6"/>
+                        </svg>
+                    </div>
+                    <div class="sidebar-title-group">
+                        <span class="brand-title">{{ CLINIC_NAME }}</span>
+                        <span class="brand-subtitle">CONSULTORIO ODONTOLÓGICO</span>
+                    </div>
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Principal</div>
+                <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'home' %}active{% endif %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    <span>Dashboard</span>
+                </a>
+
+                <div class="nav-section-title">Atención Clínica</div>
+                <a href="{% url 'paciente_lista' %}" class="nav-link {% if 'paciente' in request.resolver_match.url_name and 'reporte' not in request.resolver_match.url_name %}active{% endif %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <span>Pacientes</span>
+                </a>
+                <a href="{% url 'odontologo_lista' %}" class="nav-link {% if 'odontologo' in request.resolver_match.url_name and 'reporte' not in request.resolver_match.url_name %}active{% endif %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    <span>Odontólogos</span>
+                </a>
+                <a href="{% url 'especialidad_lista' %}" class="nav-link {% if 'especialidad' in request.resolver_match.url_name and 'reporte' not in request.resolver_match.url_name %}active{% endif %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    <span>Especialidades</span>
+                </a>
+                <a href="{% url 'cita_lista' %}" class="nav-link {% if 'cita' in request.resolver_match.url_name and 'reporte' not in request.resolver_match.url_name %}active{% endif %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    <span>Citas</span>
+                    {% if citas_hoy_pendientes_count > 0 %}
+                    <span class="nav-badge" title="Citas pendientes hoy">{{ citas_hoy_pendientes_count }}</span>
+                    {% endif %}
+                </a>
+
+                <div class="nav-section-title">Tratamientos y Recetas</div>
+                <a href="{% url 'diagnostico_lista' %}" class="nav-link {% if 'diagnostico' in request.resolver_match.url_name and 'reporte' not in request.resolver_match.url_name %}active{% endif %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    <span>Diagnósticos</span>
+                </a>
+                <a href="{% url 'tratamiento_lista' %}" class="nav-link {% if 'tratamiento' in request.resolver_match.url_name and 'reporte' not in request.resolver_match.url_name %}active{% endif %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                    <span>Tratamientos</span>
+                </a>
+                <a href="{% url 'receta_lista' %}" class="nav-link {% if 'receta' in request.resolver_match.url_name and 'reporte' not in request.resolver_match.url_name %}active{% endif %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.5 20.5 4 14l10-10a4.95 4.95 0 1 1 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+                    <span>Recetas Médicas</span>
+                </a>
+
+                <div class="nav-section-title">Informes</div>
+                <a href="{% url 'reportes_index' %}" class="nav-link {% if 'reporte' in request.resolver_match.url_name %}active{% endif %}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>Centro de Reportes</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-mini-card">
+                    <div class="user-avatar">
+                        {{ user.first_name|default:user.username|make_list|first|upper }}
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">{{ user.get_full_name|default:user.username }}</div>
+                        <div class="user-role">{% if user.is_superuser %}Administrador{% else %}Personal Médico{% endif %}</div>
+                    </div>
+                    <a href="{% url 'logout' %}" title="Cerrar Sesión" style="color: #EF4444; padding: 0.25rem;">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="main-wrapper">
+            <!-- Barra Superior -->
+            <header class="top-navbar no-print">
+                <div class="top-navbar-left">
+                    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    </button>
+                    <div class="page-breadcrumb">
+                        <span>Sonrisa Perfecta</span>
+                        <span>/</span>
+                        <strong>{% block breadcrumb %}Panel Principal{% endblock %}</strong>
+                    </div>
+                </div>
+
+                <div class="top-navbar-right">
+                    <div class="date-pill">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        <span>{{ TODAY_DATE|date:"l, d \d\e F \d\e Y" }}</span>
+                    </div>
+                    <a href="{% url 'cita_crear' %}" class="btn btn-topbar-primary">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <span>Nueva Cita</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Cuerpo de la Página -->
+            <main class="content-body">
+                <!-- Mensajes Flotantes -->
+                {% if messages %}
+                <div class="messages-container no-print">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <span>{{ message }}</span>
+                        <button class="alert-close" aria-label="Cerrar">&times;</button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts Propios en Vanilla JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

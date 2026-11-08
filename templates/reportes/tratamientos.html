@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}Reporte de Tratamientos y Costos Odontológicos{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'reportes_index' %}" style="color: inherit;">Reportes</a> / Tratamientos y Costos
+{% endblock %}
+
+{% block content %}
+<div class="card no-print" style="margin-bottom: 1.5rem;">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+            </div>
+            <div>
+                <h2 class="card-title">Reporte de Tratamientos y Costos</h2>
+                <div class="card-subtitle">Seguimiento financiero y operativo de procedimientos odontológicos &bull; {{ total_registros }} tratamientos</div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
+            <a href="?fecha_desde={{ fecha_desde }}&fecha_hasta={{ fecha_hasta }}&estado={{ estado_filtro }}&imprimir=1" target="_blank" class="btn btn-primary btn-sm">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <span>Imprimir / PDF</span>
+            </a>
+            <button type="button" class="btn btn-outline btn-sm btn-print-report" onclick="window.print()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <span>Impresión Rápida</span>
+            </button>
+        </div>
+    </div>
+
+    <form method="get" class="form-grid-3" style="align-items: flex-end;">
+        <div class="form-group">
+            <label class="form-label">Fecha Inicio Desde</label>
+            <input type="date" name="fecha_desde" value="{{ fecha_desde }}" class="form-input">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Fecha Inicio Hasta</label>
+            <input type="date" name="fecha_hasta" value="{{ fecha_hasta }}" class="form-input">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Estado de Tratamiento</label>
+            <select name="estado" class="form-select">
+                <option value="">-- Todos los Estados --</option>
+                <option value="Pendiente" {% if estado_filtro == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                <option value="En proceso" {% if estado_filtro == 'En proceso' %}selected{% endif %}>En proceso</option>
+                <option value="Finalizado" {% if estado_filtro == 'Finalizado' %}selected{% endif %}>Finalizado</option>
+            </select>
+        </div>
+        <div class="form-group" style="grid-column: span 3; display: flex; align-items: center; justify-content: flex-end; gap: 0.65rem;">
+            <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+            {% if fecha_desde or fecha_hasta or estado_filtro %}
+            <a href="{% url 'reporte_tratamientos' %}" class="btn btn-secondary">Limpiar</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- FORMATO DE REPORTE -->
+<div class="card">
+    <div class="print-header print-only">
+        <div class="print-header-left">
+            <h1>{{ CLINIC_NAME }}</h1>
+            <p><strong>{{ CLINIC_SLOGAN }}</strong> &bull; RUC: {{ CLINIC_RUC }}</p>
+            <p>{{ CLINIC_ADDRESS }} &bull; Central: {{ CLINIC_PHONE }}</p>
+            <h3 style="margin-top: 10px; color: #103F3D; font-size: 13pt;">REPORTE DE TRATAMIENTOS Y COSTOS ODONTOLÓGICOS</h3>
+        </div>
+        <div class="print-header-right">
+            <div><strong>Fecha de emisión:</strong> {{ generado_el|date:"d/m/Y H:i" }}</div>
+            <div><strong>Total procedimientos:</strong> {{ total_registros }} tratamientos</div>
+            <div><strong>Presupuesto total:</strong> <span style="font-size: 11pt; color: #103F3D; font-weight: bold;">S/. {{ total_monto }}</span></div>
+        </div>
+    </div>
+
+    <!-- Indicador de total en pantalla -->
+    <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.15rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin: 0;">Planes Terapéuticos</h3>
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Total presupuestado: <strong style="color: var(--primary, #103F3D); font-weight: 800;">S/. {{ total_monto }}</strong> &bull; {{ total_registros }} tratamientos</span>
+        </div>
+        <div style="font-size: 0.82rem; color: var(--text-muted);">
+            Generado el: <strong style="color: var(--text-main);">{{ generado_el|date:"d/m/Y H:i" }}</strong>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th style="width: 45px; text-align: center;">#</th>
+                    <th style="min-width: 170px;">Tratamiento</th>
+                    <th style="min-width: 200px;">Paciente</th>
+                    <th style="min-width: 170px;">Odontólogo</th>
+                    <th style="min-width: 130px;">Periodo</th>
+                    <th style="min-width: 100px;">Costo Presupuesto</th>
+                    <th style="text-align: right; min-width: 110px;">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tratamientos %}
+                <tr>
+                    <td style="text-align: center;">
+                        <span style="color: var(--text-muted); font-size: 0.82rem; font-weight: 600;">{{ forloop.counter }}</span>
+                    </td>
+                    <td>
+                        <strong style="color: var(--text-main); font-size: 0.92rem;">{{ t.nombre }}</strong><br>
+                        <small style="color: var(--text-muted);">{{ t.descripcion|truncatechars:45 }}</small>
+                    </td>
+                    <td>
+                        <div class="patient-cell-group">
+                            <div class="table-avatar-circle">
+                                {{ t.diagnostico.cita.paciente.nombres|make_list|first|upper }}{{ t.diagnostico.cita.paciente.apellidos|make_list|first|upper }}
+                            </div>
+                            <div class="patient-cell-details">
+                                <a href="{% url 'paciente_detalle' t.diagnostico.cita.paciente.pk %}" class="table-link-highlight">
+                                    {{ t.diagnostico.cita.paciente.nombre_completo }}
+                                </a>
+                                <span class="patient-cell-sub">DNI: {{ t.diagnostico.cita.paciente.dni }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-size: 0.88rem; color: var(--text-main); font-weight: 500;">
+                            Dr(a). {{ t.diagnostico.cita.odontologo.nombre_completo }}
+                        </span>
+                    </td>
+                    <td>
+                        <span style="font-size: 0.82rem; color: var(--text-secondary);">
+                            <strong>{{ t.fecha_inicio|date:"d/m/Y" }}</strong> &rarr; {{ t.fecha_fin|date:"d/m/Y" }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge" style="background: #EDF9F5; color: #103F3D; border: 1px solid #93EBC6; font-weight: 800; font-size: 0.82rem;">
+                            S/. {{ t.costo }}
+                        </span>
+                    </td>
+                    <td style="text-align: right;">
+                        {% if t.estado == 'Finalizado' %}
+                            <span class="badge badge-finalizado">{{ t.estado }}</span>
+                        {% elif t.estado == 'En proceso' %}
+                            <span class="badge badge-en-proceso">{{ t.estado }}</span>
+                        {% else %}
+                            <span class="badge badge-pendiente">{{ t.estado }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state-cell">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                            <p>No hay tratamientos con los filtros seleccionados.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr style="background: #FAFCFA; font-weight: bold;">
+                    <td colspan="5" style="text-align: right; padding: 12px 16px; color: var(--text-main); font-size: 0.95rem;">MONTO TOTAL PRESUPUESTADO:</td>
+                    <td colspan="2" style="color: #103F3D; font-size: 1.15rem; padding: 12px 16px; font-weight: 800;">S/. {{ total_monto }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="print-signatures print-only">
+        <div class="signature-box">Administración Financiera</div>
+        <div class="signature-box">Dirección Médica Odontológica</div>
+    </div>
+</div>
+{% endblock %}

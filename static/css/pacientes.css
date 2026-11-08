@@ -1,0 +1,154 @@
+/* ==========================================================================
+   07. MÓDULO DE PACIENTES E HISTORIAL CLÍNICO (FIGMA DENTAL CLINIC UI KIT)
+   Archivo: static/css/pacientes.css
+   ========================================================================== */
+
+.patient-header-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 22px;
+    padding: 2rem 2.25rem;
+    margin-bottom: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    box-shadow: 0 4px 20px rgba(16, 63, 61, 0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+.patient-main-info {
+    display: flex;
+    align-items: center;
+    gap: 1.35rem;
+}
+
+.patient-avatar-large {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    background: var(--primary-light, #EDF9F5);
+    border: 1px solid #D5F1E5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary, #103F3D);
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(16, 63, 61, 0.08);
+}
+
+.patient-name-title {
+    font-family: var(--font-serif, 'DM Serif Display', 'Playfair Display', Georgia, serif);
+    font-size: 1.85rem;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--text-main, #102B27);
+}
+
+.patient-meta-pill {
+    background: var(--bg-body, #F4F6F5);
+    border: 1px solid var(--border-light, #EAEFEA);
+    padding: 0.32rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 0.45rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: var(--text-muted, #5A716A);
+}
+
+.patient-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Grilla de Datos Personales */
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1.25rem;
+    background: #FAFCFA;
+    padding: 1.35rem 1.6rem;
+    border-radius: 16px;
+    border: 1px solid var(--border-light, #EAEFEA);
+    margin-bottom: 1.75rem;
+}
+
+.detail-item-label {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    color: var(--text-light, #8FA39D);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.3rem;
+}
+
+.detail-item-value {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--text-main, #102B27);
+}
+
+/* Diagnósticos & Recetas en el Historial */
+.history-item-box {
+    padding: 1.25rem 1.4rem;
+    background: #FFFFFF;
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 16px;
+    margin-bottom: 0.95rem;
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(16, 63, 61, 0.02);
+}
+
+.history-item-box:hover {
+    border-color: #D5E0DC;
+    box-shadow: 0 6px 18px rgba(16, 63, 61, 0.06);
+    transform: translateY(-1px);
+}
+
+.history-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.45rem;
+}
+
+.history-item-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--text-main, #102B27);
+}
+
+.history-item-date {
+    font-size: 0.8rem;
+    color: var(--text-muted, #5A716A);
+    font-weight: 600;
+}
+
+.history-item-body {
+    font-size: 0.9rem;
+    color: var(--text-secondary, #3D5A52);
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .patient-header-card {
+        padding: 1.5rem;
+    }
+    .patient-main-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .patient-name-title {
+        font-size: 1.45rem;
+    }
+}

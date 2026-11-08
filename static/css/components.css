@@ -1,0 +1,689 @@
+/* ==========================================================================
+   03. COMPONENTES MINIMALISTAS ELEGANTES (CARDS, BOTONES, TABLAS, BADGES)
+   Archivo: static/css/components.css
+   ========================================================================== */
+
+/* ALERTAS SUTILES */
+.messages-container {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.alert {
+    padding: 0.85rem 1.15rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-xs);
+    border: 1px solid transparent;
+}
+
+.alert-success {
+    background: var(--success-bg);
+    color: var(--success-text);
+    border-color: var(--success-border);
+}
+
+.alert-error, .alert-danger {
+    background: var(--danger-bg);
+    color: var(--danger-text);
+    border-color: var(--danger-border);
+}
+
+.alert-warning {
+    background: var(--warning-bg);
+    color: var(--warning-text);
+    border-color: var(--warning-border);
+}
+
+.alert-info {
+    background: var(--info-bg);
+    color: var(--info-text);
+    border-color: var(--info-border);
+}
+
+.alert-close {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.4;
+    transition: var(--transition);
+}
+.alert-close:hover {
+    opacity: 1;
+}
+
+/* CARDS BLANCAS CON LÍNEA ULTRAFINA (FIGMA DENTAL CLINIC UI KIT) */
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(16, 63, 61, 0.04);
+    padding: 1.6rem 1.75rem;
+    margin-bottom: 1.75rem;
+    transition: var(--transition);
+}
+
+.card:hover {
+    border-color: #D5E0DC;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1.1rem;
+    margin-bottom: 1.35rem;
+    border-bottom: 1px solid var(--border-light, #EAEFEA);
+}
+
+.card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-main, #102B27);
+    letter-spacing: -0.015em;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.card-title svg {
+    color: var(--primary, #103F3D);
+    width: 20px;
+    height: 20px;
+}
+
+.card-subtitle {
+    font-size: 0.84rem;
+    color: var(--text-muted, #5A716A);
+    margin-top: 0.2rem;
+    font-weight: 400;
+}
+
+/* BOTONES SOBRIOS ESTILO FIGMA TOOTHTRACKR */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.15rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    font-family: inherit;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.btn svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2;
+}
+
+/* Botón Primario Verde Pino (Figma ToothTrackr) */
+.btn-primary {
+    background: var(--primary, #103F3D);
+    color: #FFFFFF !important;
+    border-color: var(--primary, #103F3D);
+    box-shadow: 0 2px 8px rgba(16, 63, 61, 0.18);
+}
+.btn-primary:hover {
+    background: var(--primary-hover, #0B2F2E);
+    border-color: var(--primary-hover, #0B2F2E);
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 12px rgba(16, 63, 61, 0.25);
+    transform: translateY(-1px);
+}
+
+/* Botón Secundario Blanco Pulcro */
+.btn-secondary, .btn-outline {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light, #EAEFEA);
+    color: var(--text-muted, #5A716A);
+    box-shadow: var(--shadow-xs);
+}
+.btn-secondary:hover, .btn-outline:hover {
+    background: var(--bg-hover, #EEF4F0);
+    color: var(--primary, #103F3D);
+    border-color: #D5E0DC;
+}
+
+.btn-success {
+    background: var(--success);
+    color: white !important;
+}
+.btn-success:hover {
+    background: #059669;
+}
+
+.btn-danger {
+    background: #FFFFFF;
+    border-color: #FECACA;
+    color: #DC2626;
+}
+.btn-danger:hover {
+    background: #FEF2F2;
+    border-color: #EF4444;
+}
+
+.btn-sm {
+    padding: 0.38rem 0.75rem;
+    font-size: 0.82rem;
+    border-radius: 8px;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.98rem;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+/* BADGES EN PÍLDORAS PASTEL SUTILES CON PUNTO DE ESTADO */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.22rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 999px;
+    text-transform: capitalize;
+}
+
+.badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.badge-activo, .badge-activa, .badge-atendida, .badge-finalizado, .badge-success {
+    background: #EDF9F5;
+    color: #103F3D;
+    border: 1px solid #93EBC6;
+}
+.badge-activo::before, .badge-activa::before, .badge-atendida::before, .badge-finalizado::before, .badge-success::before {
+    background: #103F3D;
+}
+
+.badge-inactivo, .badge-inactiva, .badge-cancelada, .badge-danger, .badge-error {
+    background: #FEF2F2;
+    color: #B91C1C;
+    border: 1px solid #FECACA;
+}
+.badge-inactivo::before, .badge-inactiva::before, .badge-cancelada::before, .badge-danger::before, .badge-error::before {
+    background: #EF4444;
+}
+
+.badge-pendiente, .badge-warning {
+    background: #FFFBEB;
+    color: #B45309;
+    border: 1px solid #FDE68A;
+}
+.badge-pendiente::before, .badge-warning::before {
+    background: #F59E0B;
+}
+
+.badge-confirmada, .badge-en-proceso, .badge-en, .badge-proceso, .badge-primary {
+    background: #E6F4F1;
+    color: #103F3D;
+    border: 1px solid #BCECE0;
+}
+.badge-confirmada::before, .badge-en-proceso::before, .badge-en::before, .badge-proceso::before, .badge-primary::before {
+    background: #438983;
+}
+
+.badge-info {
+    background: #EFF6FF;
+    color: #1E40AF;
+    border: 1px solid #BFDBFE;
+}
+.badge-info::before {
+    background: #3B82F6;
+}
+
+/* COMPONENTES DE CELDAS DE TABLA COMPARTIDAS (FIGMA UI KIT) */
+.schedule-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.schedule-date {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--text-main, #102B27);
+}
+
+.schedule-time-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: #F4F6F5;
+    border: 1px solid #EAEFEA;
+    border-radius: 6px;
+    padding: 0.18rem 0.5rem;
+    font-size: 0.74rem;
+    color: var(--text-muted, #5A716A);
+    font-weight: 600;
+    width: fit-content;
+}
+
+.schedule-time-pill svg {
+    color: var(--primary, #103F3D);
+}
+
+.patient-cell-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.table-avatar-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #EDF9F5;
+    color: #103F3D;
+    font-weight: 700;
+    font-size: 0.84rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #D5F1E5;
+    flex-shrink: 0;
+}
+
+.patient-cell-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.table-link-highlight {
+    font-weight: 700;
+    color: var(--primary, #103F3D);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: var(--transition);
+}
+
+.table-link-highlight:hover {
+    color: #072221;
+    text-decoration: underline;
+}
+
+.patient-cell-sub {
+    font-size: 0.76rem;
+    color: var(--text-muted, #5A716A);
+}
+
+.doctor-cell-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.doctor-spec-tag {
+    display: inline-flex;
+    width: fit-content;
+    background: #FAFCFA;
+    border: 1px solid #D5E0DC;
+    border-radius: 6px;
+    padding: 0.12rem 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-secondary, #3D5A52);
+}
+
+.table-actions-cluster {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    justify-content: flex-end;
+}
+
+.btn-action-round, .btn-table-action {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #FFFFFF;
+    border: 1px solid var(--border-light, #EAEFEA);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary, #3D5A52);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.btn-action-round:hover, .btn-table-action:hover {
+    background: #F4F6F5;
+    border-color: #D5E0DC;
+    color: var(--primary, #103F3D);
+    transform: translateY(-1px);
+}
+
+.btn-action-danger:hover {
+    background: #FEF2F2 !important;
+    border-color: #FECACA !important;
+    color: #DC2626 !important;
+}
+
+.empty-state-cell {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: var(--text-muted, #5A716A);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.empty-state-cell svg {
+    width: 44px;
+    height: 44px;
+    color: #8FA39D;
+}
+
+.empty-state-cell p {
+    font-size: 0.92rem;
+    margin: 0;
+}
+
+/* STRIP DE KPIS RÁPIDOS PARA LISTADOS */
+.kpi-quick-strip {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+}
+
+.kpi-quick-pill {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 12px;
+    padding: 0.65rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 2px 8px rgba(16, 63, 61, 0.02);
+}
+
+.kpi-quick-pill .pill-number {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--primary, #103F3D);
+    line-height: 1;
+}
+
+.kpi-quick-pill .pill-label {
+    font-size: 0.78rem;
+    color: var(--text-muted, #5A716A);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+/* TABLAS DE LÍNEAS ULTRAFINAS (FIGMA) */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 14px;
+    background: white;
+}
+
+.table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.88rem;
+}
+
+.table-custom thead {
+    background: #F9FAF9;
+    border-bottom: 1px solid var(--border-light, #EAEFEA);
+}
+
+.table-custom th {
+    padding: 0.85rem 1rem;
+    font-weight: 700;
+    color: var(--text-muted, #5A716A);
+    letter-spacing: 0.05em;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+}
+
+.table-custom td {
+    padding: 0.95rem 1rem;
+    border-bottom: 1px solid #F4F6F5;
+    color: var(--text-main, #102B27);
+    vertical-align: middle;
+}
+
+.table-custom tbody tr:hover td {
+    background-color: #F9FAF9;
+}
+
+.table-custom tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* BARRA DE FILTROS Y BÚSQUEDA */
+.filter-bar {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 16px;
+    padding: 1.1rem 1.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(16, 63, 61, 0.02);
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex: 1;
+    min-width: 280px;
+}
+
+.search-box-inner {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.search-box-inner .search-icon {
+    position: absolute;
+    left: 0.85rem;
+    color: var(--text-light, #8FA39D);
+    pointer-events: none;
+    width: 16px;
+    height: 16px;
+}
+
+.search-box-inner .form-input {
+    padding-left: 2.35rem;
+}
+
+/* PAGINACIÓN */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-light, #EAEFEA);
+    font-size: 0.84rem;
+    color: var(--text-muted, #5A716A);
+}
+
+.pagination-controls {
+    display: flex;
+    gap: 0.45rem;
+}
+
+.pagination-controls .btn {
+    border-radius: 8px;
+    padding: 0.38rem 0.85rem;
+}
+
+/* --------------------------------------------------------------------------
+   TARJETA DE CONFIRMACIÓN DE ELIMINACIÓN (FIGMA CLINICAL LUXURY)
+   -------------------------------------------------------------------------- */
+.delete-confirmation-card {
+    max-width: 580px;
+    margin: 2.5rem auto;
+    background: #FFFFFF;
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 22px;
+    padding: 2.5rem 2.5rem 2.25rem;
+    box-shadow: 0 12px 36px rgba(16, 63, 61, 0.08);
+    text-align: center;
+}
+
+.delete-icon-badge {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    background: #FEF2F2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.35rem auto;
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.12);
+}
+
+.delete-card-title {
+    font-family: var(--font-serif, 'DM Serif Display', 'Playfair Display', Georgia, serif);
+    font-size: 1.65rem;
+    font-weight: 400;
+    color: var(--text-main, #102B27);
+    margin-bottom: 0.45rem;
+    line-height: 1.25;
+}
+
+.delete-card-subtitle {
+    font-size: 0.92rem;
+    color: var(--text-muted, #5A716A);
+    margin-bottom: 1.5rem;
+}
+
+.delete-item-summary {
+    background: #F9FAF9;
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 14px;
+    padding: 1.15rem 1.4rem;
+    text-align: left;
+    margin: 1.25rem 0 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.delete-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.88rem;
+    padding-bottom: 0.45rem;
+    border-bottom: 1px solid #F0F4F2;
+}
+
+.delete-summary-row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.delete-summary-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-light, #8FA39D);
+}
+
+.delete-summary-val {
+    font-weight: 700;
+    color: var(--text-main, #102B27);
+}
+
+.delete-warning-banner {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 12px;
+    padding: 0.95rem 1.15rem;
+    color: #92400E;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    text-align: left;
+    margin-bottom: 1.75rem;
+}
+
+.delete-warning-banner svg {
+    color: #D97706;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.delete-actions-footer {
+    display: flex;
+    justify-content: center;
+    gap: 0.85rem;
+    align-items: center;
+}
+
+.btn-delete-confirm {
+    background: #DC2626 !important;
+    color: #FFFFFF !important;
+    border: 1px solid #DC2626 !important;
+    padding: 0.65rem 1.4rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    box-shadow: 0 4px 14px rgba(220, 38, 38, 0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    transition: var(--transition);
+}
+
+.btn-delete-confirm:hover {
+    background: #B91C1C !important;
+    border-color: #B91C1C !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.28);
+}

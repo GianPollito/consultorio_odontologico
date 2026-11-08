@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Citas Odontológicas - {{ CLINIC_NAME }}</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <style>
+        body { background: white; padding: 25px; font-size: 10pt; }
+        .no-print-bar { background: #0A4D68; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 8px; margin-bottom: 25px; }
+        @media print { .no-print-bar { display: none !important; } }
+    </style>
+</head>
+<body class="is-print-preview">
+    <div class="no-print-bar">
+        <div><strong>Vista Previa de Impresión / Guardar en PDF</strong></div>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="window.print()" class="btn btn-primary btn-sm">Imprimir / Guardar como PDF</button>
+            <button onclick="window.close()" class="btn btn-secondary btn-sm">Cerrar</button>
+        </div>
+    </div>
+
+    <div class="print-header">
+        <div class="print-header-left">
+            <h1>{{ CLINIC_NAME }}</h1>
+            <p><strong>{{ CLINIC_SLOGAN }}</strong> &bull; RUC: {{ CLINIC_RUC }}</p>
+            <p>{{ CLINIC_ADDRESS }} &bull; Central: {{ CLINIC_PHONE }}</p>
+            <h3 style="margin-top: 10px; color: #088395; font-size: 13pt;">REPORTE OFICIAL DE CITAS ODONTOLÓGICAS</h3>
+            {% if fecha_desde or fecha_hasta %}
+            <p style="font-size: 9pt; color: #475569;">Rango: Desde {{ fecha_desde|default:"Inicio" }} hasta {{ fecha_hasta|default:"Actualidad" }}</p>
+            {% endif %}
+        </div>
+        <div class="print-header-right">
+            <div><strong>Fecha de emisión:</strong> {{ generado_el|date:"d/m/Y H:i" }}</div>
+            <div><strong>Total registros:</strong> {{ total_registros }} citas</div>
+            <div><strong>Usuario:</strong> {{ user.get_full_name|default:user.username }}</div>
+        </div>
+    </div>
+
+    <table class="table-custom" style="width: 100%; border: 1px solid #94A3B8; border-collapse: collapse;">
+        <thead>
+            <tr style="background: #F1F5F9;">
+                <th style="border: 1px solid #94A3B8; padding: 6px;">#</th>
+                <th style="border: 1px solid #94A3B8; padding: 6px;">Fecha / Hora</th>
+                <th style="border: 1px solid #94A3B8; padding: 6px;">Paciente</th>
+                <th style="border: 1px solid #94A3B8; padding: 6px;">DNI</th>
+                <th style="border: 1px solid #94A3B8; padding: 6px;">Odontólogo</th>
+                <th style="border: 1px solid #94A3B8; padding: 6px;">Especialidad</th>
+                <th style="border: 1px solid #94A3B8; padding: 6px;">Motivo</th>
+                <th style="border: 1px solid #94A3B8; padding: 6px;">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in citas %}
+            <tr>
+                <td style="border: 1px solid #CBD5E1; padding: 6px;">{{ forloop.counter }}</td>
+                <td style="border: 1px solid #CBD5E1; padding: 6px;">{{ c.fecha|date:"d/m/Y" }} {{ c.hora|time:"H:i" }}</td>
+                <td style="border: 1px solid #CBD5E1; padding: 6px;"><strong>{{ c.paciente.nombre_completo }}</strong></td>
+                <td style="border: 1px solid #CBD5E1; padding: 6px;">{{ c.paciente.dni }}</td>
+                <td style="border: 1px solid #CBD5E1; padding: 6px;">{{ c.odontologo.nombre_completo }}</td>
+                <td style="border: 1px solid #CBD5E1; padding: 6px;">{{ c.odontologo.especialidad.nombre }}</td>
+                <td style="border: 1px solid #CBD5E1; padding: 6px;">{{ c.motivo }}</td>
+                <td style="border: 1px solid #CBD5E1; padding: 6px;">{{ c.estado }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align: center; padding: 20px;">Sin registros para los filtros seleccionados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="print-signatures" style="margin-top: 60px; display: flex; justify-content: space-around;">
+        <div class="signature-box" style="border-top: 1px solid #000; width: 220px; text-align: center; padding-top: 5px;">
+            Responsable de Admisión
+        </div>
+        <div class="signature-box" style="border-top: 1px solid #000; width: 220px; text-align: center; padding-top: 5px;">
+            Dirección Médica Odontológica
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Pacientes{% endblock %}
+{% block breadcrumb %}Pacientes{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+                <h2 class="card-title">Padrón de Pacientes</h2>
+                <div class="card-subtitle">Historias clínicas e información de contacto &bull; {{ total_registros }} pacientes registrados</div>
+            </div>
+        </div>
+        <a href="{% url 'paciente_crear' %}" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Nuevo Paciente</span>
+        </a>
+    </div>
+
+    <!-- Barra de Búsqueda -->
+    <div class="filter-bar">
+        <form method="get" action="{% url 'paciente_lista' %}" class="search-box">
+            <div class="search-box-inner">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" name="q" value="{{ query }}" placeholder="Buscar por nombres, DNI, teléfono o correo..." class="form-input">
+            </div>
+            <button type="submit" class="btn btn-secondary">
+                <span>Buscar</span>
+            </button>
+            {% if query %}
+            <a href="{% url 'paciente_lista' %}" class="btn btn-outline" title="Limpiar búsqueda">Limpiar</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Tabla de Pacientes -->
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>Paciente</th>
+                    <th>DNI</th>
+                    <th>F. Nacimiento</th>
+                    <th>Teléfono</th>
+                    <th>Correo Electrónico</th>
+                    <th>Dirección</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in page_obj %}
+                <tr>
+                    <td>
+                        <div class="patient-cell-group">
+                            <div class="table-avatar-circle">
+                                {{ p.nombres|make_list|first|upper }}{{ p.apellidos|make_list|first|upper }}
+                            </div>
+                            <div class="patient-cell-details">
+                                <a href="{% url 'paciente_detalle' p.pk %}" class="table-link-highlight">
+                                    {{ p.nombre_completo }}
+                                </a>
+                                <span class="patient-cell-sub">Registrado: {{ p.created_at|date:"d/m/Y" }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><strong style="color: var(--text-main);">{{ p.dni }}</strong></td>
+                    <td>{{ p.fecha_nacimiento|date:"d/m/Y" }}</td>
+                    <td>{{ p.telefono }}</td>
+                    <td>{{ p.correo }}</td>
+                    <td><span style="font-size: 0.85rem; color: var(--text-muted);">{{ p.direccion|truncatechars:30 }}</span></td>
+                    <td style="text-align: right;">
+                        <div class="table-actions-cluster">
+                            <a href="{% url 'paciente_detalle' p.pk %}" class="btn-table-action" title="Ver Historial Clínico">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </a>
+                            <a href="{% url 'paciente_editar' p.pk %}" class="btn-table-action" title="Editar Paciente">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </a>
+                            <a href="{% url 'paciente_eliminar' p.pk %}" class="btn-table-action" style="color: #DC2626;" title="Eliminar Paciente">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="table-empty-cell">
+                        <div class="empty-state-inner">
+                            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                            <p>No se encontraron pacientes registrados con los criterios solicitados.</p>
+                            <a href="{% url 'paciente_crear' %}" class="btn btn-primary btn-sm">+ Registrar Primer Paciente</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        <div>Mostrando página <strong>{{ page_obj.number }}</strong> de {{ page_obj.paginator.num_pages }}</div>
+        <div class="pagination-controls">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" class="btn btn-outline btn-sm">&laquo; Anterior</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}" class="btn btn-outline btn-sm">Siguiente &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

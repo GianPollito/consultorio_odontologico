@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Diagnósticos Clínicos{% endblock %}
+{% block breadcrumb %}Diagnósticos{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div>
+                <h2 class="card-title">Registro de Diagnósticos Odontológicos</h2>
+                <div class="card-subtitle">Evaluaciones clínicas y planes terapéuticos emitidos &bull; {{ total_registros }} evaluaciones</div>
+            </div>
+        </div>
+        <a href="{% url 'diagnostico_crear' %}" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Nuevo Diagnóstico</span>
+        </a>
+    </div>
+
+    <!-- Barra de Filtros -->
+    <div class="filter-bar">
+        <form method="get" action="{% url 'diagnostico_lista' %}" class="search-box">
+            <div class="search-box-inner">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" name="q" value="{{ query }}" placeholder="Buscar por paciente, DNI, odontólogo o diagnóstico..." class="form-input">
+            </div>
+            <input type="date" name="fecha" value="{{ fecha_filtro }}" class="form-input" style="max-width: 170px;" title="Filtrar por fecha">
+            <button type="submit" class="btn btn-secondary">Buscar</button>
+            {% if query or fecha_filtro %}
+            <a href="{% url 'diagnostico_lista' %}" class="btn btn-outline" title="Limpiar búsqueda">Limpiar</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Paciente</th>
+                    <th>Odontólogo Evaluador</th>
+                    <th>Diagnóstico Clínico</th>
+                    <th>Planes Asociados</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in page_obj %}
+                <tr>
+                    <td>
+                        <strong style="color: var(--text-main);">{{ d.fecha|date:"d/m/Y" }}</strong>
+                    </td>
+                    <td>
+                        <div class="patient-cell-group">
+                            <div class="table-avatar-circle">
+                                {{ d.cita.paciente.nombres|make_list|first|upper }}{{ d.cita.paciente.apellidos|make_list|first|upper }}
+                            </div>
+                            <div class="patient-cell-details">
+                                <a href="{% url 'paciente_detalle' d.cita.paciente.pk %}" class="table-link-highlight">
+                                    {{ d.cita.paciente.nombre_completo }}
+                                </a>
+                                <span class="patient-cell-sub">DNI: {{ d.cita.paciente.dni }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-size: 0.88rem; color: var(--text-secondary); font-weight: 500;">
+                            Dr(a). {{ d.cita.odontologo.nombre_completo }}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="font-weight: 700; color: var(--text-main); font-size: 0.9rem;">{{ d.descripcion|truncatechars:65 }}</div>
+                        <small style="color: var(--text-muted);">Recom: {{ d.recomendaciones|default:"Sin recomendaciones"|truncatechars:45 }}</small>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                            <span class="badge" style="background: #E6F4F1; color: #103F3D; border: 1px solid #BCECE0;">
+                                {{ d.tratamientos.count }} tratamientos
+                            </span>
+                            <span class="badge" style="background: #EDF9F5; color: #103F3D; border: 1px solid #93EBC6;">
+                                {{ d.recetas.count }} recetas
+                            </span>
+                        </div>
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="table-actions-cluster">
+                            <a href="{% url 'diagnostico_detalle' d.pk %}" class="btn-table-action" title="Ver Detalle Clínico">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </a>
+                            <a href="{% url 'diagnostico_editar' d.pk %}" class="btn-table-action" title="Editar Diagnóstico">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </a>
+                            <a href="{% url 'diagnostico_eliminar' d.pk %}" class="btn-table-action" style="color: #DC2626;" title="Eliminar Diagnóstico">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="table-empty-cell">
+                        <div class="empty-state-inner">
+                            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                            <p>No hay diagnósticos clínicos registrados con los criterios seleccionados.</p>
+                            <a href="{% url 'diagnostico_crear' %}" class="btn btn-primary btn-sm">+ Registrar Diagnóstico</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        <div>Mostrando página <strong>{{ page_obj.number }}</strong> de {{ page_obj.paginator.num_pages }}</div>
+        <div class="pagination-controls">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if fecha_filtro %}&fecha={{ fecha_filtro }}{% endif %}" class="btn btn-outline btn-sm">&laquo; Anterior</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if fecha_filtro %}&fecha={{ fecha_filtro }}{% endif %}" class="btn btn-outline btn-sm">Siguiente &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

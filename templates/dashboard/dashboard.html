@@ -1,0 +1,423 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Odontológico{% endblock %}
+{% block breadcrumb %}Indicadores y Resumen General{% endblock %}
+
+{% block content %}
+<!-- HERO CARD INSTITUCIONAL FIGMA TOOTHTRACKR (VERDE PINO DE LUJO) -->
+<div class="dashboard-hero-card">
+    <div class="hero-left">
+        <div class="hero-date-chip">
+            <span class="hero-chip-dot"></span>
+            <span>Resumen Clínico al Día &bull; {{ CLINIC_NAME }}</span>
+        </div>
+        <h2 class="hero-greeting-title">
+            ¡Hola de nuevo, {{ user.first_name|default:user.username }}!
+        </h2>
+        <p class="hero-greeting-subtitle">
+            Monitoreo en tiempo real de pacientes, citas programadas, diagnósticos emitidos y tratamientos activos.
+        </p>
+        
+        <div class="hero-actions">
+            <a href="{% url 'cita_crear' %}" class="btn btn-hero-white">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Nueva Cita</span>
+            </a>
+            <a href="{% url 'paciente_crear' %}" class="btn btn-hero-frosted">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                <span>Nuevo Paciente</span>
+            </a>
+            <a href="{% url 'diagnostico_crear' %}" class="btn btn-hero-frosted">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                <span>Diagnosticar</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- TARJETA DESTACADA DENTRO DEL BANNER (RÉPLICA EXACTA FIGMA DASHBOARD) -->
+    <div class="hero-right">
+        <div class="hero-spotlight-card">
+            <div class="spotlight-header">
+                <span class="spotlight-badge">
+                    <span class="spotlight-dot"></span>
+                    Próxima Cita en Agenda
+                </span>
+                <span class="spotlight-tag">Hoy</span>
+            </div>
+            
+            <div class="spotlight-body">
+                {% if citas_recientes %}
+                    {% with proxima=citas_recientes.0 %}
+                    <div class="spotlight-patient-info">
+                        <div class="spotlight-avatar">
+                            {{ proxima.paciente.nombres|make_list|first|upper }}{{ proxima.paciente.apellidos|make_list|first|upper }}
+                        </div>
+                        <div class="spotlight-patient-text">
+                            <h4 class="spotlight-patient-name">{{ proxima.paciente.nombre_completo }}</h4>
+                            <p class="spotlight-doctor-name">Dr(a). {{ proxima.odontologo.nombre_completo }}</p>
+                        </div>
+                    </div>
+                    <div class="spotlight-schedule-pill">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>{{ proxima.fecha|date:"d/m/Y" }} &bull; {{ proxima.hora|time:"H:i" }} hrs</span>
+                    </div>
+                    <a href="{% url 'cita_editar' proxima.pk %}" class="btn-spotlight-action">
+                        <span>Gestionar Cita</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </a>
+                    {% endwith %}
+                {% else %}
+                    <div class="spotlight-patient-info">
+                        <div class="spotlight-avatar">SP</div>
+                        <div class="spotlight-patient-text">
+                            <h4 class="spotlight-patient-name">Agenda al día</h4>
+                            <p class="spotlight-doctor-name">No hay citas pendientes inmediatas</p>
+                        </div>
+                    </div>
+                    <div class="spotlight-schedule-pill">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>Disponibilidad total para agendamiento</span>
+                    </div>
+                    <a href="{% url 'cita_crear' %}" class="btn-spotlight-action">
+                        <span>Agendar Cita</span>
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CUADRO DE INDICADORES (KPIS) STRIPE MINIMALISTA -->
+<div class="kpi-grid">
+    <!-- KPI 01: Pacientes -->
+    <div class="kpi-card">
+        <div class="kpi-card-top">
+            <span class="kpi-label">Pacientes Registrados</span>
+            <div class="kpi-icon-badge kpi-sky">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+        </div>
+        <div class="kpi-value-row">
+            <span class="kpi-number">{{ total_pacientes }}</span>
+        </div>
+        <div class="kpi-card-footer">
+            <span class="kpi-pill kpi-pill-emerald">+{{ pacientes_este_mes }} este mes</span>
+            <span class="kpi-subtext">Padrón activo</span>
+        </div>
+    </div>
+
+    <!-- KPI 02: Citas -->
+    <div class="kpi-card">
+        <div class="kpi-card-top">
+            <span class="kpi-label">Citas Programadas</span>
+            <div class="kpi-icon-badge kpi-amber">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+        </div>
+        <div class="kpi-value-row">
+            <span class="kpi-number">{{ total_citas }}</span>
+        </div>
+        <div class="kpi-card-footer">
+            <span class="kpi-pill kpi-pill-amber">{{ citas_hoy }} para hoy</span>
+            <span class="kpi-subtext">{{ citas_pendientes }} pendientes</span>
+        </div>
+    </div>
+
+    <!-- KPI 03: Diagnósticos -->
+    <div class="kpi-card">
+        <div class="kpi-card-top">
+            <span class="kpi-label">Diagnósticos Clínicos</span>
+            <div class="kpi-icon-badge kpi-indigo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+        </div>
+        <div class="kpi-value-row">
+            <span class="kpi-number">{{ total_diagnosticos }}</span>
+        </div>
+        <div class="kpi-card-footer">
+            <span class="kpi-pill kpi-pill-indigo">{{ diagnosticos_mes }} este mes</span>
+            <span class="kpi-subtext">Historial registrado</span>
+        </div>
+    </div>
+
+    <!-- KPI 04: Tratamientos -->
+    <div class="kpi-card">
+        <div class="kpi-card-top">
+            <span class="kpi-label">Tratamientos</span>
+            <div class="kpi-icon-badge kpi-emerald">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+            </div>
+        </div>
+        <div class="kpi-value-row">
+            <span class="kpi-number">{{ total_tratamientos }}</span>
+        </div>
+        <div class="kpi-card-footer">
+            <span class="kpi-pill kpi-pill-emerald">{{ tratamientos_en_proceso }} en proceso</span>
+            <span class="kpi-subtext">{{ tratamientos_finalizados }} finalizados</span>
+        </div>
+    </div>
+</div>
+
+<!-- GRÁFICO VISUAL: DISTRIBUCIÓN DEL ESTADO DE CITAS -->
+<div class="card status-overview-card">
+    <div class="card-header status-card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+            </div>
+            <div>
+                <h3 class="card-title">Distribución del Estado de Citas Odontológicas</h3>
+                <p class="card-subtitle">Desglose porcentual y métricas en tiempo real sobre el padrón clínico</p>
+            </div>
+        </div>
+        <div class="header-actions-group">
+            <span class="status-total-chip">
+                <span class="chip-pulse-dot"></span>
+                <strong>{{ total_citas }}</strong> Citas en Total
+            </span>
+            <a href="{% url 'cita_lista' %}" class="btn btn-outline btn-sm">Ver Todas las Citas</a>
+        </div>
+    </div>
+
+    <!-- Barra de progreso segmentada de alta precisión con aspecto premium -->
+    <div class="status-bar-wrapper">
+        <div class="status-progress-track">
+            {% if total_citas > 0 %}
+                {% if citas_atendidas > 0 %}
+                <div class="progress-segment segment-atendida" style="width: {% widthratio citas_atendidas total_citas 100 %}%;" title="Atendidas: {{ citas_atendidas }} ({% widthratio citas_atendidas total_citas 100 %}%)"></div>
+                {% endif %}
+                {% if citas_confirmadas > 0 %}
+                <div class="progress-segment segment-confirmada" style="width: {% widthratio citas_confirmadas total_citas 100 %}%;" title="Confirmadas: {{ citas_confirmadas }} ({% widthratio citas_confirmadas total_citas 100 %}%)"></div>
+                {% endif %}
+                {% if citas_pendientes > 0 %}
+                <div class="progress-segment segment-pendiente" style="width: {% widthratio citas_pendientes total_citas 100 %}%;" title="Pendientes: {{ citas_pendientes }} ({% widthratio citas_pendientes total_citas 100 %}%)"></div>
+                {% endif %}
+                {% if citas_canceladas > 0 %}
+                <div class="progress-segment segment-cancelada" style="width: {% widthratio citas_canceladas total_citas 100 %}%;" title="Canceladas: {{ citas_canceladas }} ({% widthratio citas_canceladas total_citas 100 %}%)"></div>
+                {% endif %}
+            {% else %}
+                <div class="segment-empty">Sin citas agendadas actualmente</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Tarjetas de métrica por estado con porcentajes y micro-indicadores -->
+    <div class="status-legend-grid">
+        <div class="status-legend-card status-card-atendida">
+            <div class="legend-card-left">
+                <div class="legend-indicator-circle circle-atendida">
+                    <span class="inner-dot"></span>
+                </div>
+                <div class="legend-text-col">
+                    <span class="legend-status-name">Atendidas</span>
+                    <span class="legend-percent">{% if total_citas > 0 %}{% widthratio citas_atendidas total_citas 100 %}% del total{% else %}0%{% endif %}</span>
+                </div>
+            </div>
+            <div class="legend-card-right">
+                <span class="legend-count-val val-atendida">{{ citas_atendidas }}</span>
+            </div>
+        </div>
+
+        <div class="status-legend-card status-card-confirmada">
+            <div class="legend-card-left">
+                <div class="legend-indicator-circle circle-confirmada">
+                    <span class="inner-dot"></span>
+                </div>
+                <div class="legend-text-col">
+                    <span class="legend-status-name">Confirmadas</span>
+                    <span class="legend-percent">{% if total_citas > 0 %}{% widthratio citas_confirmadas total_citas 100 %}% del total{% else %}0%{% endif %}</span>
+                </div>
+            </div>
+            <div class="legend-card-right">
+                <span class="legend-count-val val-confirmada">{{ citas_confirmadas }}</span>
+            </div>
+        </div>
+
+        <div class="status-legend-card status-card-pendiente">
+            <div class="legend-card-left">
+                <div class="legend-indicator-circle circle-pendiente">
+                    <span class="inner-dot"></span>
+                </div>
+                <div class="legend-text-col">
+                    <span class="legend-status-name">Pendientes</span>
+                    <span class="legend-percent">{% if total_citas > 0 %}{% widthratio citas_pendientes total_citas 100 %}% del total{% else %}0%{% endif %}</span>
+                </div>
+            </div>
+            <div class="legend-card-right">
+                <span class="legend-count-val val-pendiente">{{ citas_pendientes }}</span>
+            </div>
+        </div>
+
+        <div class="status-legend-card status-card-cancelada">
+            <div class="legend-card-left">
+                <div class="legend-indicator-circle circle-cancelada">
+                    <span class="inner-dot"></span>
+                </div>
+                <div class="legend-text-col">
+                    <span class="legend-status-name">Canceladas</span>
+                    <span class="legend-percent">{% if total_citas > 0 %}{% widthratio citas_canceladas total_citas 100 %}% del total{% else %}0%{% endif %}</span>
+                </div>
+            </div>
+            <div class="legend-card-right">
+                <span class="legend-count-val val-cancelada">{{ citas_canceladas }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECCIÓN INFERIOR: CITAS RECIENTES Y TRATAMIENTOS ACTIVOS -->
+<div class="dashboard-grid-2">
+    <!-- Citas en Agenda Reciente -->
+    <div class="card recent-appointments-card">
+        <div class="card-header">
+            <div class="header-title-container">
+                <div class="header-icon-badge">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                </div>
+                <div>
+                    <h3 class="card-title">Citas en Agenda Reciente</h3>
+                    <p class="card-subtitle">Últimas citas registradas en el consultorio</p>
+                </div>
+            </div>
+            <a href="{% url 'cita_lista' %}" class="btn btn-outline btn-sm">Ver Todas</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table-custom table-appointments">
+                <thead>
+                    <tr>
+                        <th>Fecha y Hora</th>
+                        <th>Paciente</th>
+                        <th>Odontólogo</th>
+                        <th>Estado</th>
+                        <th style="text-align: right;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cita in citas_recientes %}
+                    <tr class="appointment-row">
+                        <td>
+                            <div class="schedule-cell">
+                                <span class="schedule-date">{{ cita.fecha|date:"d/m/Y" }}</span>
+                                <span class="schedule-time-pill">
+                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    {{ cita.hora|time:"H:i" }} hrs
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="patient-cell-group">
+                                <div class="table-avatar-circle">
+                                    {{ cita.paciente.nombres|make_list|first|upper }}{{ cita.paciente.apellidos|make_list|first|upper }}
+                                </div>
+                                <div class="patient-cell-details">
+                                    <a href="{% url 'paciente_detalle' cita.paciente.pk %}" class="table-link-highlight">
+                                        {{ cita.paciente.nombre_completo }}
+                                    </a>
+                                    <span class="patient-cell-sub">DNI: {{ cita.paciente.dni }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="doctor-cell-group">
+                                <span class="doctor-name">Dr(a). {{ cita.odontologo.nombre_completo }}</span>
+                                <span class="doctor-spec-tag">{{ cita.odontologo.especialidades.all.0.nombre|default:"Odontología General" }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge badge-{{ cita.estado|lower }}">{{ cita.estado }}</span>
+                        </td>
+                        <td style="text-align: right;">
+                            <div class="table-actions-cluster">
+                                <a href="{% url 'cita_editar' cita.pk %}" class="btn-table-action" title="Editar / Atender Cita">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                </a>
+                                <a href="{% url 'paciente_detalle' cita.paciente.pk %}" class="btn-table-action" title="Ver Historial del Paciente">
+                                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="table-empty-cell">
+                            <div class="empty-state-inner">
+                                <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                <p>No hay citas registradas en el sistema actualmente.</p>
+                                <a href="{% url 'cita_crear' %}" class="btn btn-primary btn-sm">+ Registrar Primera Cita</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tratamientos en Proceso -->
+    <div class="card active-treatments-card">
+        <div class="card-header">
+            <div class="header-title-container">
+                <div class="header-icon-badge">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                </div>
+                <div>
+                    <h3 class="card-title">Tratamientos en Proceso</h3>
+                    <p class="card-subtitle">Seguimiento de planes clínicos y costos activos</p>
+                </div>
+            </div>
+            <a href="{% url 'tratamiento_lista' %}" class="btn btn-outline btn-sm">Ver Todos</a>
+        </div>
+
+        <div class="treatment-list-wrapper">
+            {% for trat in tratamientos_activos %}
+            <div class="treatment-item-card">
+                <div class="treatment-item-header">
+                    <div class="treatment-title-cluster">
+                        <div class="treatment-dot-indicator"></div>
+                        <strong class="treatment-item-title">{{ trat.nombre }}</strong>
+                    </div>
+                    <span class="treatment-cost-badge">S/. {{ trat.costo }}</span>
+                </div>
+                
+                <div class="treatment-patient-row">
+                    <div class="treatment-patient-avatar">
+                        {{ trat.diagnostico.cita.paciente.nombres|make_list|first|upper }}{{ trat.diagnostico.cita.paciente.apellidos|make_list|first|upper }}
+                    </div>
+                    <div class="treatment-patient-text">
+                        <span class="patient-label">Paciente</span>
+                        <a href="{% url 'paciente_detalle' trat.diagnostico.cita.paciente.pk %}" class="patient-link">
+                            {{ trat.diagnostico.cita.paciente.nombre_completo }}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="treatment-timeline-row">
+                    <div class="timeline-dates">
+                        <div class="timeline-date-item">
+                            <span class="date-label">Inicio</span>
+                            <strong class="date-val">{{ trat.fecha_inicio|date:"d/m/Y" }}</strong>
+                        </div>
+                        <span class="timeline-arrow">&bull;</span>
+                        <div class="timeline-date-item">
+                            <span class="date-label">Fin estimado</span>
+                            <strong class="date-val">{{ trat.fecha_fin|date:"d/m/Y" }}</strong>
+                        </div>
+                    </div>
+                    <span class="badge badge-en-proceso">En Progreso</span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="treatment-empty-card">
+                <div class="empty-state-inner">
+                    <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                    <p>No hay tratamientos actualmente en proceso.</p>
+                    <a href="{% url 'tratamiento_crear' %}" class="btn btn-outline btn-sm">+ Iniciar Tratamiento</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

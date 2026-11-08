@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Acceso al Sistema{% endblock %} - {{ CLINIC_NAME }}</title>
+    <!-- Tipografías de Google Fonts: Serif Editorial de Lujo (Playfair / DM Serif) y Sans-serif pulcra -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Hojas de estilo del sistema -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/forms.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/auth.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}?v=6">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="tooth-auth-body">
+    <div class="tooth-viewport-container">
+        <!-- Espaciador superior simétrico para mantener la tarjeta centrada y pie fijado abajo -->
+        <div class="tooth-viewport-spacer-top" aria-hidden="true"></div>
+
+        <!-- Tarjeta Flotante Principal de Acceso (Figma Dental UI Kit) -->
+        <main class="tooth-auth-card {% block card_class %}{% endblock %}">
+            <!-- Emblema Odontológico Original: Diente Verde Pino #103F3D con Punto Menta #93EBC6 -->
+            <div class="tooth-logo-wrapper">
+                <svg viewBox="0 0 48 48" width="46" height="46" fill="none" class="tooth-svg-emblem">
+                    <!-- Silueta del diente en verde pino institucional -->
+                    <path d="M14 9C10.5 11 7 15 7 21C7 28 9.5 35 12.5 41C14 44 16.5 44 17.5 41C19 36 20.5 31.5 24 31.5C27.5 31.5 29 36 30.5 41C31.5 44 34 44 35.5 41C38.5 35 41 28 41 21C41 15 37.5 11 34 9C30.5 7 27.5 8 24 8C20.5 8 17.5 7 14 9Z" fill="#103F3D"/>
+                    <!-- Punto menta superior característico del diseño de Figma -->
+                    <circle cx="34.5" cy="11.5" r="4.5" fill="#93EBC6"/>
+                </svg>
+            </div>
+
+            <!-- Título en Tipografía Serif de Alta Gama y Subtítulo Limpio -->
+            <div class="tooth-card-header">
+                <h1 class="tooth-serif-title">{% block form_title %}Iniciar Sesión{% endblock %}</h1>
+                <p class="tooth-sans-subtitle">{% block form_subtitle %}Ingrese sus credenciales para acceder al consultorio{% endblock %}</p>
+            </div>
+
+            <!-- Bloque del Formulario -->
+            <div class="tooth-card-content">
+                {% block content %}{% endblock %}
+            </div>
+
+            <!-- Bloque Inferior dentro de la Tarjeta -->
+            <div class="tooth-card-footer">
+                {% block auth_footer %}{% endblock %}
+            </div>
+        </main>
+
+        <!-- Pie Institucional Fuera de la Tarjeta (Copyright al Fondo) -->
+        <footer class="tooth-auth-page-footer">
+            <p class="copyright-line">&copy; {% now "Y" %} {{ CLINIC_NAME }} &bull; Consultorio Odontológico &bull; Privacidad y Términos</p>
+        </footer>
+    </div>
+
+    <!-- Scripts de Interacción y Auto-Dismiss con Tiempo Límite -->
+    <script>
+        function togglePassword(fieldId, triggerBtn) {
+            const input = document.getElementById(fieldId);
+            if (!input) return;
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            
+            const openEye = triggerBtn.querySelector('.eye-open');
+            const closedEye = triggerBtn.querySelector('.eye-closed');
+            if (openEye && closedEye) {
+                openEye.style.display = isPassword ? 'none' : 'block';
+                closedEye.style.display = isPassword ? 'block' : 'none';
+            }
+        }
+
+        // Programar tiempo límite de aparición para los mensajes (4 segundos)
+        function scheduleAlertDismiss(container) {
+            if (!container) return;
+            if (container._dismissTimer) clearTimeout(container._dismissTimer);
+            container._dismissTimer = setTimeout(function() {
+                container.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                container.style.opacity = '0';
+                container.style.transform = 'translateY(-4px)';
+                setTimeout(function() {
+                    container.style.display = 'none';
+                }, 400);
+            }, 4000);
+        }
+
+        // Evitar el diálogo 'Confirmar reenvío del formulario' al refrescar la página
+        if (window.history && window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const msgBox = document.getElementById('auth-messages');
+            if (msgBox && msgBox.children.length > 0) {
+                scheduleAlertDismiss(msgBox);
+            }
+        });
+    </script>
+</body>
+</html>

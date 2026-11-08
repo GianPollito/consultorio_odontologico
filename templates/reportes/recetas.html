@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Reporte de Prescripciones Médicas (Recetas){% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'reportes_index' %}" style="color: inherit;">Reportes</a> / Recetas Médicas
+{% endblock %}
+
+{% block content %}
+<div class="card no-print" style="margin-bottom: 1.5rem;">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.5 20.5 4 14l10-10a4.95 4.95 0 1 1 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+            </div>
+            <div>
+                <h2 class="card-title">Reporte de Prescripciones Médicas</h2>
+                <div class="card-subtitle">Medicamentos indicados, posologías y periodos farmacológicos &bull; {{ total_registros }} recetas</div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
+            <a href="?fecha_desde={{ fecha_desde }}&fecha_hasta={{ fecha_hasta }}&medicamento={{ medicamento_filtro }}&paciente={{ query_paciente }}&imprimir=1" target="_blank" class="btn btn-primary btn-sm">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <span>Imprimir / PDF</span>
+            </a>
+            <button type="button" class="btn btn-outline btn-sm btn-print-report" onclick="window.print()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <span>Impresión Rápida</span>
+            </button>
+        </div>
+    </div>
+
+    <form method="get" class="form-grid-3" style="align-items: flex-end;">
+        <div class="form-group">
+            <label class="form-label">Fecha Desde</label>
+            <input type="date" name="fecha_desde" value="{{ fecha_desde }}" class="form-input">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Fecha Hasta</label>
+            <input type="date" name="fecha_hasta" value="{{ fecha_hasta }}" class="form-input">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Medicamento</label>
+            <input type="text" name="medicamento" value="{{ medicamento_filtro }}" placeholder="Ej. Amoxicilina, Ketorolaco..." class="form-input">
+        </div>
+        <div class="form-group" style="grid-column: span 2;">
+            <label class="form-label">Paciente (Nombre, Apellidos o DNI)</label>
+            <input type="text" name="paciente" value="{{ query_paciente }}" placeholder="Filtrar por paciente..." class="form-input">
+        </div>
+        <div class="form-group" style="display: flex; align-items: center; justify-content: flex-end; gap: 0.65rem;">
+            <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+            {% if fecha_desde or fecha_hasta or medicamento_filtro or query_paciente %}
+            <a href="{% url 'reporte_recetas' %}" class="btn btn-secondary">Limpiar</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- FORMATO DE REPORTE -->
+<div class="card">
+    <div class="print-header print-only">
+        <div class="print-header-left">
+            <h1>{{ CLINIC_NAME }}</h1>
+            <p><strong>{{ CLINIC_SLOGAN }}</strong> &bull; RUC: {{ CLINIC_RUC }}</p>
+            <p>{{ CLINIC_ADDRESS }} &bull; Central: {{ CLINIC_PHONE }}</p>
+            <h3 style="margin-top: 10px; color: #103F3D; font-size: 13pt;">REPORTE OFICIAL DE RECETAS MÉDICAS EMITIDAS</h3>
+        </div>
+        <div class="print-header-right">
+            <div><strong>Fecha de emisión:</strong> {{ generado_el|date:"d/m/Y H:i" }}</div>
+            <div><strong>Total prescripciones:</strong> {{ total_registros }} recetas</div>
+            <div><strong>Usuario:</strong> {{ user.get_full_name|default:user.username }}</div>
+        </div>
+    </div>
+
+    <!-- Indicador de total en pantalla -->
+    <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.15rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin: 0;">Prescripciones Farmacológicas</h3>
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Mostrando {{ total_registros }} recetas según los criterios seleccionados</span>
+        </div>
+        <div style="font-size: 0.82rem; color: var(--text-muted);">
+            Generado el: <strong style="color: var(--text-main);">{{ generado_el|date:"d/m/Y H:i" }}</strong>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th style="width: 45px; text-align: center;">#</th>
+                    <th style="min-width: 100px;">Fecha</th>
+                    <th style="min-width: 170px;">Medicamento</th>
+                    <th style="min-width: 160px;">Dosis y Frecuencia</th>
+                    <th style="min-width: 110px;">Duración</th>
+                    <th style="min-width: 200px;">Paciente</th>
+                    <th style="min-width: 170px;">Odontólogo</th>
+                    <th>Indicaciones Clínicas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in recetas %}
+                <tr>
+                    <td style="text-align: center;">
+                        <span style="color: var(--text-muted); font-size: 0.82rem; font-weight: 600;">{{ forloop.counter }}</span>
+                    </td>
+                    <td>
+                        <span style="font-weight: 600; color: var(--text-secondary); font-size: 0.85rem;">{{ r.diagnostico.fecha|date:"d/m/Y" }}</span>
+                    </td>
+                    <td>
+                        <strong style="color: var(--primary, #103F3D); font-size: 0.95rem;">{{ r.medicamento }}</strong>
+                    </td>
+                    <td>
+                        <strong style="color: var(--text-main);">{{ r.dosis }}</strong><br>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">{{ r.frecuencia }}</span>
+                    </td>
+                    <td>
+                        <span class="badge badge-info">{{ r.duracion }}</span>
+                    </td>
+                    <td>
+                        <div class="patient-cell-group">
+                            <div class="table-avatar-circle">
+                                {{ r.diagnostico.cita.paciente.nombres|make_list|first|upper }}{{ r.diagnostico.cita.paciente.apellidos|make_list|first|upper }}
+                            </div>
+                            <div class="patient-cell-details">
+                                <a href="{% url 'paciente_detalle' r.diagnostico.cita.paciente.pk %}" class="table-link-highlight">
+                                    {{ r.diagnostico.cita.paciente.nombre_completo }}
+                                </a>
+                                <span class="patient-cell-sub">DNI: {{ r.diagnostico.cita.paciente.dni }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-size: 0.88rem; color: var(--text-main); font-weight: 500;">
+                            Dr(a). {{ r.diagnostico.cita.odontologo.nombre_completo }}
+                        </span>
+                    </td>
+                    <td>
+                        <small style="color: var(--text-secondary); line-height: 1.45;">{{ r.indicaciones|default:"Sin especificaciones adicionales" }}</small>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8">
+                        <div class="empty-state-cell">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.5 20.5 4 14l10-10a4.95 4.95 0 1 1 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+                            <p>No hay recetas médicas coincidentes con los filtros aplicados.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="print-signatures print-only">
+        <div class="signature-box">Responsable de Farmacia y Despacho</div>
+        <div class="signature-box">Dirección Médica Odontológica</div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,966 @@
+/* ==========================================================================
+   06. MÓDULO DEL DASHBOARD (FIGMA DENTAL CLINIC UI KIT - TOOTHTRACKR EXACTO)
+   Archivo: static/css/dashboard.css
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   HERO CARD INSTITUCIONAL FIGMA (VERDE PINO DE LUJO #103F3D)
+   -------------------------------------------------------------------------- */
+.dashboard-hero-card {
+    background: #103F3D;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(147, 235, 198, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 90% 80%, rgba(67, 137, 131, 0.18) 0%, transparent 50%);
+    border: 1px solid rgba(16, 63, 61, 0.4);
+    border-radius: 24px;
+    padding: 2.25rem 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 12px 36px rgba(16, 63, 61, 0.12);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-left {
+    flex: 1;
+    min-width: 320px;
+    max-width: 680px;
+}
+
+.hero-date-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(147, 235, 198, 0.16);
+    border: 1px solid rgba(147, 235, 198, 0.28);
+    padding: 0.32rem 0.85rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #93EBC6;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.hero-chip-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #93EBC6;
+    box-shadow: 0 0 6px rgba(147, 235, 198, 0.6);
+}
+
+.hero-greeting-title {
+    font-family: var(--font-serif, 'DM Serif Display', 'Playfair Display', Georgia, serif);
+    font-size: 2.35rem;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    color: #FFFFFF;
+    line-height: 1.2;
+    margin-bottom: 0.65rem;
+}
+
+.hero-greeting-subtitle {
+    font-size: 0.94rem;
+    color: #BCECE0;
+    line-height: 1.6;
+    margin-bottom: 1.65rem;
+    max-width: 620px;
+}
+
+.hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+}
+
+/* Botón Blanco Primario del Hero (Figma) */
+.btn-hero-white {
+    background: #FFFFFF;
+    color: #103F3D !important;
+    border: 1px solid #FFFFFF;
+    font-weight: 700;
+    font-size: 0.88rem;
+    padding: 0.65rem 1.35rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn-hero-white:hover {
+    background: #F4F6F5;
+    color: #072221 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+/* Botones Translúcidos del Hero (Figma) */
+.btn-hero-frosted {
+    background: rgba(255, 255, 255, 0.12);
+    color: #FFFFFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn-hero-frosted:hover {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   TARJETA SPOTLIGHT DENTRO DEL BANNER (RÉPLICA EXACTA FIGMA TOOTHTRACKR)
+   -------------------------------------------------------------------------- */
+.hero-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.hero-spotlight-card {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 1.4rem 1.5rem;
+    min-width: 290px;
+    max-width: 320px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+    color: var(--text-main, #102B27);
+    display: flex;
+    flex-direction: column;
+}
+
+.spotlight-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.85rem;
+}
+
+.spotlight-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #EDF9F5;
+    color: #103F3D;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid #D5F1E5;
+}
+
+.spotlight-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #103F3D;
+}
+
+.spotlight-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #8FA39D;
+}
+
+.spotlight-patient-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+}
+
+.spotlight-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #EDF9F5;
+    color: #103F3D;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #D5F1E5;
+    flex-shrink: 0;
+}
+
+.spotlight-patient-name {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #102B27;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.spotlight-doctor-name {
+    font-size: 0.78rem;
+    color: #5A716A;
+    margin-top: 0.2rem;
+    margin-bottom: 0;
+}
+
+.spotlight-schedule-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #F4F6F5;
+    border: 1px solid #EAEFEA;
+    padding: 0.45rem 0.75rem;
+    border-radius: 10px;
+    font-size: 0.78rem;
+    color: #5A716A;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+
+.spotlight-schedule-pill svg {
+    color: #103F3D;
+    flex-shrink: 0;
+}
+
+.btn-spotlight-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    width: 100%;
+    background: #103F3D;
+    color: #FFFFFF !important;
+    font-size: 0.84rem;
+    font-weight: 600;
+    padding: 0.55rem 0.95rem;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.btn-spotlight-action:hover {
+    background: #0B2F2E;
+    color: #FFFFFF !important;
+    transform: translateY(-1px);
+}
+
+/* --------------------------------------------------------------------------
+   INDICADORES CLÍNICOS (KPIS) FIGMA
+   -------------------------------------------------------------------------- */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 20px;
+    padding: 1.6rem 1.65rem;
+    box-shadow: 0 4px 20px rgba(16, 63, 61, 0.04);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(16, 63, 61, 0.08);
+    border-color: #D5E0DC;
+}
+
+.kpi-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-label {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--text-muted, #5A716A);
+}
+
+.kpi-icon-badge {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.kpi-icon-badge svg {
+    width: 20px;
+    height: 20px;
+}
+
+.kpi-sky {
+    background: #EDF9F5;
+    color: #103F3D;
+    border: 1px solid #D5F1E5;
+}
+.kpi-amber {
+    background: #FFFBEB;
+    color: #D97706;
+    border: 1px solid #FDE68A;
+}
+.kpi-indigo {
+    background: #F0FDF4;
+    color: #15803D;
+    border: 1px solid #BBF7D0;
+}
+.kpi-emerald {
+    background: #EDF9F5;
+    color: #103F3D;
+    border: 1px solid #D5F1E5;
+}
+
+.kpi-value-row {
+    margin-bottom: 0.65rem;
+}
+
+.kpi-number {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--text-main, #102B27);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.kpi-card-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+.kpi-pill {
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+}
+.kpi-pill-emerald {
+    background: #EDF9F5;
+    color: #103F3D;
+    border: 1px solid #93EBC6;
+}
+.kpi-pill-amber {
+    background: #FFFBEB;
+    color: #B45309;
+    border: 1px solid #FDE68A;
+}
+.kpi-pill-indigo {
+    background: #F0FDF4;
+    color: #15803D;
+    border: 1px solid #BBF7D0;
+}
+
+.kpi-subtext {
+    font-size: 0.78rem;
+    color: var(--text-light, #8FA39D);
+    font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   DISTRIBUCIÓN DEL ESTADO DE CITAS (FIGMA DENTAL CLINIC UI KIT)
+   -------------------------------------------------------------------------- */
+.status-overview-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 22px;
+    padding: 1.85rem 2.25rem;
+    box-shadow: 0 4px 20px rgba(16, 63, 61, 0.04);
+    margin-bottom: 2rem;
+}
+
+.status-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-light, #EAEFEA);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header-title-container {
+    display: flex;
+    align-items: center;
+    gap: 0.95rem;
+}
+
+.header-icon-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--primary-light, #EDF9F5);
+    color: var(--primary, #103F3D);
+    border: 1px solid #D5F1E5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.header-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+}
+
+.status-total-chip {
+    background: var(--bg-body, #F4F6F5);
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 999px;
+    padding: 0.4rem 0.95rem;
+    font-size: 0.82rem;
+    color: var(--text-muted, #5A716A);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.status-total-chip strong {
+    color: var(--text-main, #102B27);
+    font-weight: 700;
+}
+
+.chip-pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10B981;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+.status-bar-wrapper {
+    margin: 1.5rem 0 1.5rem 0;
+}
+
+.status-progress-track {
+    height: 16px;
+    background: #EEF4F0;
+    border-radius: 9999px;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid var(--border-light, #EAEFEA);
+    padding: 2px;
+    gap: 2px;
+}
+
+.progress-segment {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.segment-atendida {
+    background: #103F3D;
+}
+.segment-confirmada {
+    background: #438983;
+}
+.segment-pendiente {
+    background: #F59E0B;
+}
+.segment-cancelada {
+    background: #EF4444;
+}
+
+.segment-empty {
+    width: 100%;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-light, #8FA39D);
+    line-height: 16px;
+}
+
+/* Grilla de Tarjetas de Estado (4 Columnas) */
+.status-legend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.status-legend-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 16px;
+    padding: 1.15rem 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(16, 63, 61, 0.02);
+}
+
+.status-legend-card:hover {
+    background: #FFFFFF;
+    border-color: #D5E0DC;
+    box-shadow: 0 8px 24px rgba(16, 63, 61, 0.08);
+    transform: translateY(-2px);
+}
+
+.legend-card-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.legend-indicator-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.inner-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.circle-atendida {
+    background: #EDF9F5;
+    border: 1px solid #D5F1E5;
+}
+.circle-atendida .inner-dot {
+    background: #103F3D;
+    box-shadow: 0 0 6px rgba(16, 63, 61, 0.4);
+}
+
+.circle-confirmada {
+    background: #E6F4F1;
+    border: 1px solid #BCECE0;
+}
+.circle-confirmada .inner-dot {
+    background: #438983;
+    box-shadow: 0 0 6px rgba(67, 137, 131, 0.4);
+}
+
+.circle-pendiente {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+}
+.circle-pendiente .inner-dot {
+    background: #F59E0B;
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+}
+
+.circle-cancelada {
+    background: #FEF2F2;
+    border: 1px solid #FECACA;
+}
+.circle-cancelada .inner-dot {
+    background: #EF4444;
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}
+
+.legend-text-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.legend-status-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-main, #102B27);
+    line-height: 1.2;
+}
+
+.legend-percent {
+    font-size: 0.74rem;
+    color: var(--text-light, #8FA39D);
+    margin-top: 0.15rem;
+}
+
+.legend-card-right {
+    display: flex;
+    align-items: baseline;
+}
+
+.legend-count-val {
+    font-size: 1.45rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.val-atendida   { color: #103F3D; }
+.val-confirmada { color: #438983; }
+.val-pendiente  { color: #B45309; }
+.val-cancelada  { color: #B91C1C; }
+
+/* --------------------------------------------------------------------------
+   SECCIÓN INFERIOR: CITAS RECIENTES Y TRATAMIENTOS ACTIVOS
+   -------------------------------------------------------------------------- */
+.dashboard-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+    gap: 1.75rem;
+    margin-bottom: 2rem;
+}
+
+.recent-appointments-card,
+.active-treatments-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-radius: 22px;
+    padding: 1.85rem 2rem;
+    box-shadow: 0 4px 20px rgba(16, 63, 61, 0.04);
+}
+
+/* Tabla de Citas en Agenda Reciente */
+.table-appointments {
+    margin-top: 0.5rem;
+}
+
+.appointment-row td {
+    padding: 1.05rem 1rem;
+    border-bottom: 1px solid #F4F6F5;
+}
+
+.schedule-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.schedule-date {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--text-main, #102B27);
+}
+
+.schedule-time-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: #F4F6F5;
+    border: 1px solid #EAEFEA;
+    border-radius: 6px;
+    padding: 0.18rem 0.5rem;
+    font-size: 0.74rem;
+    color: var(--text-muted, #5A716A);
+    font-weight: 600;
+    width: fit-content;
+}
+
+.schedule-time-pill svg {
+    color: var(--primary, #103F3D);
+}
+
+.patient-cell-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.table-avatar-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #EDF9F5;
+    color: #103F3D;
+    font-weight: 700;
+    font-size: 0.84rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #D5F1E5;
+    flex-shrink: 0;
+}
+
+.patient-cell-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.table-link-highlight {
+    font-weight: 700;
+    color: var(--primary, #103F3D);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: var(--transition);
+}
+
+.table-link-highlight:hover {
+    color: var(--primary-hover, #0B2F2E);
+    text-decoration: underline;
+}
+
+.patient-cell-sub {
+    font-size: 0.74rem;
+    color: var(--text-light, #8FA39D);
+    margin-top: 0.15rem;
+}
+
+.doctor-cell-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.doctor-name {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--text-main, #102B27);
+}
+
+.doctor-spec-tag {
+    font-size: 0.74rem;
+    color: var(--text-muted, #5A716A);
+    margin-top: 0.15rem;
+}
+
+.table-actions-cluster {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.45rem;
+}
+
+.btn-table-action {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border-light, #EAEFEA);
+    background: #FFFFFF;
+    color: var(--text-muted, #5A716A);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.btn-table-action:hover {
+    background: #EDF9F5;
+    border-color: #103F3D;
+    color: #103F3D;
+    transform: translateY(-1px);
+}
+
+.table-empty-cell {
+    padding: 3rem 1.5rem !important;
+    text-align: center;
+}
+
+.empty-state-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-light, #8FA39D);
+}
+
+.empty-state-inner p {
+    font-size: 0.88rem;
+    color: var(--text-muted, #5A716A);
+    margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   LISTA DE TRATAMIENTOS EN PROCESO
+   -------------------------------------------------------------------------- */
+.treatment-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    margin-top: 0.5rem;
+}
+
+.treatment-item-card {
+    background: #FFFFFF;
+    border: 1px solid var(--border-light, #EAEFEA);
+    border-left: 4px solid var(--primary, #103F3D);
+    border-radius: 16px;
+    padding: 1.25rem 1.4rem;
+    transition: var(--transition);
+    box-shadow: 0 2px 8px rgba(16, 63, 61, 0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.treatment-item-card:hover {
+    border-color: #D5E0DC;
+    border-left-color: var(--accent, #438983);
+    box-shadow: 0 8px 24px rgba(16, 63, 61, 0.08);
+    transform: translateY(-2px);
+}
+
+.treatment-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.treatment-title-cluster {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.treatment-dot-indicator {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--primary, #103F3D);
+    flex-shrink: 0;
+}
+
+.treatment-item-title {
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: var(--text-main, #102B27);
+}
+
+.treatment-cost-badge {
+    background: #EDF9F5;
+    color: #103F3D;
+    border: 1px solid #93EBC6;
+    font-size: 0.82rem;
+    font-weight: 800;
+    border-radius: 999px;
+    padding: 0.22rem 0.75rem;
+    letter-spacing: -0.01em;
+}
+
+.treatment-patient-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    background: #F9FAF9;
+    padding: 0.55rem 0.85rem;
+    border-radius: 10px;
+    border: 1px solid #F0F4F2;
+}
+
+.treatment-patient-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #EAEFEA;
+    color: #102B27;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.treatment-patient-text {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+}
+
+.patient-label {
+    font-size: 0.72rem;
+    color: var(--text-light, #8FA39D);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.patient-link {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: var(--primary, #103F3D);
+    text-decoration: none;
+}
+
+.patient-link:hover {
+    text-decoration: underline;
+}
+
+.treatment-timeline-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.25rem;
+}
+
+.timeline-dates {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.timeline-date-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.date-label {
+    font-size: 0.68rem;
+    color: var(--text-light, #8FA39D);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.date-val {
+    font-size: 0.8rem;
+    color: var(--text-muted, #5A716A);
+    font-weight: 600;
+}
+
+.timeline-arrow {
+    color: var(--text-light, #8FA39D);
+    font-size: 0.85rem;
+}
+
+.treatment-empty-card {
+    padding: 2.5rem 1.5rem;
+    border: 1px dashed var(--border-light, #EAEFEA);
+    border-radius: 16px;
+    background: #FFFFFF;
+    text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+    .dashboard-hero-card {
+        padding: 1.75rem;
+    }
+    .hero-greeting-title {
+        font-size: 1.85rem;
+    }
+    .hero-right {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .hero-spotlight-card {
+        width: 100%;
+        max-width: 100%;
+    }
+    .dashboard-grid-2 {
+        grid-template-columns: 1fr;
+    }
+}

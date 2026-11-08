@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}Reporte de Diagnósticos Clínicos{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'reportes_index' %}" style="color: inherit;">Reportes</a> / Diagnósticos Clínicos
+{% endblock %}
+
+{% block content %}
+<div class="card no-print" style="margin-bottom: 1.5rem;">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+            </div>
+            <div>
+                <h2 class="card-title">Reporte de Diagnósticos Clínicos</h2>
+                <div class="card-subtitle">Historial de evaluaciones odontológicas y recomendaciones &bull; {{ total_registros }} evaluaciones</div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
+            <a href="?fecha_desde={{ fecha_desde }}&fecha_hasta={{ fecha_hasta }}&odontologo={{ odontologo_id }}&paciente={{ query_paciente }}&imprimir=1" target="_blank" class="btn btn-primary btn-sm">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <span>Imprimir / PDF</span>
+            </a>
+            <button type="button" class="btn btn-outline btn-sm btn-print-report" onclick="window.print()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <span>Impresión Rápida</span>
+            </button>
+        </div>
+    </div>
+
+    <form method="get" class="form-grid-3" style="align-items: flex-end;">
+        <div class="form-group">
+            <label class="form-label">Fecha Desde</label>
+            <input type="date" name="fecha_desde" value="{{ fecha_desde }}" class="form-input">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Fecha Hasta</label>
+            <input type="date" name="fecha_hasta" value="{{ fecha_hasta }}" class="form-input">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Odontólogo Especialista</label>
+            <select name="odontologo" class="form-select">
+                <option value="">-- Todos los Especialistas --</option>
+                {% for o in odontologos %}
+                <option value="{{ o.id }}" {% if odontologo_id == o.id|stringformat:"s" %}selected{% endif %}>Dr(a). {{ o.nombre_completo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group" style="grid-column: span 2;">
+            <label class="form-label">Paciente (Nombre, Apellidos o DNI)</label>
+            <input type="text" name="paciente" value="{{ query_paciente }}" placeholder="Filtrar por paciente..." class="form-input">
+        </div>
+        <div class="form-group" style="display: flex; align-items: center; justify-content: flex-end; gap: 0.65rem;">
+            <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+            {% if fecha_desde or fecha_hasta or odontologo_id or query_paciente %}
+            <a href="{% url 'reporte_diagnosticos' %}" class="btn btn-secondary">Limpiar</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- FORMATO DE REPORTE -->
+<div class="card">
+    <div class="print-header print-only">
+        <div class="print-header-left">
+            <h1>{{ CLINIC_NAME }}</h1>
+            <p><strong>{{ CLINIC_SLOGAN }}</strong> &bull; RUC: {{ CLINIC_RUC }}</p>
+            <p>{{ CLINIC_ADDRESS }} &bull; Central: {{ CLINIC_PHONE }}</p>
+            <h3 style="margin-top: 10px; color: #103F3D; font-size: 13pt;">REPORTE OFICIAL DE DIAGNÓSTICOS CLÍNICOS</h3>
+        </div>
+        <div class="print-header-right">
+            <div><strong>Fecha de emisión:</strong> {{ generado_el|date:"d/m/Y H:i" }}</div>
+            <div><strong>Total registros:</strong> {{ total_registros }} diagnósticos</div>
+            <div><strong>Usuario:</strong> {{ user.get_full_name|default:user.username }}</div>
+        </div>
+    </div>
+
+    <!-- Indicador de total en pantalla -->
+    <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.15rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin: 0;">Evaluaciones Registradas</h3>
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Mostrando {{ total_registros }} diagnósticos según los criterios seleccionados</span>
+        </div>
+        <div style="font-size: 0.82rem; color: var(--text-muted);">
+            Generado el: <strong style="color: var(--text-main);">{{ generado_el|date:"d/m/Y H:i" }}</strong>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th style="width: 45px; text-align: center;">#</th>
+                    <th style="min-width: 110px;">Fecha</th>
+                    <th style="min-width: 200px;">Paciente</th>
+                    <th style="min-width: 180px;">Odontólogo</th>
+                    <th>Hallazgos y Diagnóstico</th>
+                    <th>Recomendaciones Terapéuticas</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in diagnosticos %}
+                <tr>
+                    <td style="text-align: center;">
+                        <span style="color: var(--text-muted); font-size: 0.82rem; font-weight: 600;">{{ forloop.counter }}</span>
+                    </td>
+                    <td>
+                        <span style="font-weight: 700; color: var(--text-main);">{{ d.fecha|date:"d/m/Y" }}</span>
+                    </td>
+                    <td>
+                        <div class="patient-cell-group">
+                            <div class="table-avatar-circle">
+                                {{ d.cita.paciente.nombres|make_list|first|upper }}{{ d.cita.paciente.apellidos|make_list|first|upper }}
+                            </div>
+                            <div class="patient-cell-details">
+                                <a href="{% url 'paciente_detalle' d.cita.paciente.pk %}" class="table-link-highlight">
+                                    {{ d.cita.paciente.nombre_completo }}
+                                </a>
+                                <span class="patient-cell-sub">DNI: {{ d.cita.paciente.dni }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <strong style="color: var(--text-main); font-size: 0.88rem;">Dr(a). {{ d.cita.odontologo.nombre_completo }}</strong><br>
+                        <span class="doctor-spec-tag">{{ d.cita.odontologo.especialidad.nombre }}</span>
+                    </td>
+                    <td>
+                        <span style="color: var(--text-main); font-weight: 500; font-size: 0.88rem; line-height: 1.45;">{{ d.descripcion }}</span>
+                    </td>
+                    <td>
+                        <small style="color: var(--text-secondary); line-height: 1.45;">{{ d.recomendaciones|default:"Sin especificaciones adicionales" }}</small>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state-cell">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+                            <p>No hay diagnósticos coincidentes con los criterios de búsqueda.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="print-signatures print-only">
+        <div class="signature-box">Responsable de Auditoría Clínica</div>
+        <div class="signature-box">Firma y Sello del Odontólogo</div>
+    </div>
+</div>
+{% endblock %}

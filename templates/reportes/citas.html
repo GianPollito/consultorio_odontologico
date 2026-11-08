@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}Reporte de Citas Odontológicas{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'reportes_index' %}" style="color: inherit;">Reportes</a> / Citas Odontológicas
+{% endblock %}
+
+{% block content %}
+<!-- ENCABEZADO Y FILTROS DEL REPORTE (PANTALLA) -->
+<div class="card no-print" style="margin-bottom: 1.5rem;">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div>
+                <h2 class="card-title">Reporte de Citas Odontológicas</h2>
+                <div class="card-subtitle">Análisis y registro de citas programadas, atendidas y canceladas &bull; {{ total_registros }} registros</div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
+            <a href="?fecha_desde={{ fecha_desde }}&fecha_hasta={{ fecha_hasta }}&odontologo={{ odontologo_id }}&estado={{ estado_filtro }}&imprimir=1" target="_blank" class="btn btn-primary btn-sm">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <span>Imprimir / PDF</span>
+            </a>
+            <button type="button" class="btn btn-outline btn-sm btn-print-report" onclick="window.print()">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                <span>Impresión Rápida</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros de Búsqueda -->
+    <form method="get" class="form-grid-3" style="align-items: flex-end;">
+        <div class="form-group">
+            <label class="form-label">Fecha Desde</label>
+            <input type="date" name="fecha_desde" value="{{ fecha_desde }}" class="form-input">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Fecha Hasta</label>
+            <input type="date" name="fecha_hasta" value="{{ fecha_hasta }}" class="form-input">
+        </div>
+        <div class="form-group">
+            <label class="form-label">Odontólogo Especialista</label>
+            <select name="odontologo" class="form-select">
+                <option value="">-- Todos los Especialistas --</option>
+                {% for o in odontologos %}
+                <option value="{{ o.id }}" {% if odontologo_id == o.id|stringformat:"s" %}selected{% endif %}>Dr(a). {{ o.nombre_completo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Estado de Cita</label>
+            <select name="estado" class="form-select">
+                <option value="">-- Todos los Estados --</option>
+                <option value="Pendiente" {% if estado_filtro == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                <option value="Confirmada" {% if estado_filtro == 'Confirmada' %}selected{% endif %}>Confirmada</option>
+                <option value="Atendida" {% if estado_filtro == 'Atendida' %}selected{% endif %}>Atendida</option>
+                <option value="Cancelada" {% if estado_filtro == 'Cancelada' %}selected{% endif %}>Cancelada</option>
+            </select>
+        </div>
+        <div class="form-group" style="grid-column: span 2; display: flex; align-items: center; justify-content: flex-end; gap: 0.65rem;">
+            <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+            {% if fecha_desde or fecha_hasta or odontologo_id or estado_filtro %}
+            <a href="{% url 'reporte_citas' %}" class="btn btn-secondary">Limpiar</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- RESULTADOS DEL REPORTE (PANTALLA Y VERSIÓN IMPRESA) -->
+<div class="card">
+    <!-- Membrete institucional que SOLO aparece al imprimir en papel o PDF -->
+    <div class="print-header print-only">
+        <div class="print-header-left">
+            <h1>{{ CLINIC_NAME }}</h1>
+            <p><strong>{{ CLINIC_SLOGAN }}</strong> &bull; RUC: {{ CLINIC_RUC }}</p>
+            <p>{{ CLINIC_ADDRESS }} &bull; Central: {{ CLINIC_PHONE }}</p>
+            <h3 style="margin-top: 10px; color: #103F3D; font-size: 13pt;">REPORTE OFICIAL DE CITAS ODONTOLÓGICAS</h3>
+        </div>
+        <div class="print-header-right">
+            <div><strong>Fecha de emisión:</strong> {{ generado_el|date:"d/m/Y H:i" }}</div>
+            <div><strong>Total registros:</strong> {{ total_registros }} citas</div>
+            <div><strong>Usuario:</strong> {{ user.get_full_name|default:user.username }}</div>
+        </div>
+    </div>
+
+    <!-- Indicador de total en pantalla -->
+    <div class="no-print" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.15rem; flex-wrap: wrap; gap: 0.75rem;">
+        <div>
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-main); margin: 0;">Resultados Encontrados</h3>
+            <span style="font-size: 0.82rem; color: var(--text-muted);">Mostrando {{ total_registros }} citas según los criterios seleccionados</span>
+        </div>
+        <div style="font-size: 0.82rem; color: var(--text-muted);">
+            Generado el: <strong style="color: var(--text-main);">{{ generado_el|date:"d/m/Y H:i" }}</strong>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th style="width: 45px; text-align: center;">#</th>
+                    <th style="min-width: 140px;">Fecha y Hora</th>
+                    <th style="min-width: 200px;">Paciente</th>
+                    <th style="min-width: 180px;">Odontólogo</th>
+                    <th style="min-width: 130px;">Especialidad</th>
+                    <th>Motivo de Consulta</th>
+                    <th style="text-align: right; min-width: 110px;">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in citas %}
+                <tr>
+                    <td style="text-align: center;">
+                        <span style="color: var(--text-muted); font-size: 0.82rem; font-weight: 600;">{{ forloop.counter }}</span>
+                    </td>
+                    <td>
+                        <div class="schedule-cell">
+                            <span class="schedule-date">{{ c.fecha|date:"d/m/Y" }}</span>
+                            <span class="schedule-time-pill">
+                                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                {{ c.hora|time:"H:i" }} hrs
+                            </span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="patient-cell-group">
+                            <div class="table-avatar-circle">
+                                {{ c.paciente.nombres|make_list|first|upper }}{{ c.paciente.apellidos|make_list|first|upper }}
+                            </div>
+                            <div class="patient-cell-details">
+                                <a href="{% url 'paciente_detalle' c.paciente.pk %}" class="table-link-highlight">
+                                    {{ c.paciente.nombre_completo }}
+                                </a>
+                                <span class="patient-cell-sub">DNI: {{ c.paciente.dni }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="doctor-cell-group">
+                            <strong style="color: var(--text-main); font-size: 0.88rem;">Dr(a). {{ c.odontologo.nombre_completo }}</strong>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="doctor-spec-tag">{{ c.odontologo.especialidad.nombre }}</span>
+                    </td>
+                    <td>
+                        <span style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.45;">{{ c.motivo }}</span>
+                    </td>
+                    <td style="text-align: right;">
+                        {% if c.estado == 'Atendida' %}
+                            <span class="badge badge-atendida">{{ c.estado }}</span>
+                        {% elif c.estado == 'Confirmada' %}
+                            <span class="badge badge-confirmada">{{ c.estado }}</span>
+                        {% elif c.estado == 'Pendiente' %}
+                            <span class="badge badge-pendiente">{{ c.estado }}</span>
+                        {% else %}
+                            <span class="badge badge-cancelada">{{ c.estado }}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">
+                        <div class="empty-state-cell">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <p>No hay citas coincidentes con los filtros seleccionados.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Firmas institucionales para impresión en papel / PDF -->
+    <div class="print-signatures print-only">
+        <div class="signature-box">
+            Responsable de Admisión y Citas
+        </div>
+        <div class="signature-box">
+            Dirección Médica Odontológica
+        </div>
+    </div>
+</div>
+{% endblock %}

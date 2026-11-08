@@ -1,0 +1,84 @@
+/* ==========================================================================
+   09. DISEÑO ADAPTABLE Y MEDIA QUERIES (TABLETS Y MÓVILES)
+   Archivo: static/css/responsive.css
+   ========================================================================== */
+
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-wrapper {
+        margin-left: 0;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .dashboard-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .content-body {
+        padding: 1.15rem;
+    }
+
+    .top-navbar {
+        padding: 0 1.15rem;
+    }
+
+    .welcome-banner,
+    .dashboard-hero-card {
+        padding: 1.5rem;
+    }
+
+    .welcome-banner-title,
+    .hero-greeting-title {
+        font-size: 1.45rem;
+    }
+
+    .welcome-banner-actions,
+    .hero-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .welcome-banner-actions .btn,
+    .hero-actions .btn {
+        width: 100%;
+    }
+
+    .form-grid-2, .form-grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-box {
+        max-width: 100%;
+    }
+
+    .app-footer {
+        flex-direction: column;
+        gap: 0.65rem;
+        text-align: center;
+    }
+}

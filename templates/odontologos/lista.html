@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}Cuerpo Médico Odontológico{% endblock %}
+{% block breadcrumb %}Odontólogos{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div>
+                <h2 class="card-title">Cuerpo Médico Odontológico</h2>
+                <div class="card-subtitle">Especialistas colegiados de la clínica &bull; {{ total_registros }} profesionales registrados</div>
+            </div>
+        </div>
+        <a href="{% url 'odontologo_crear' %}" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Nuevo Odontólogo</span>
+        </a>
+    </div>
+
+    <!-- Filtros y Búsqueda -->
+    <div class="filter-bar">
+        <form method="get" action="{% url 'odontologo_lista' %}" class="search-box">
+            <div class="search-box-inner">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" name="q" value="{{ query }}" placeholder="Buscar por nombres, apellidos o colegiatura..." class="form-input">
+            </div>
+            <select name="estado" class="form-select" style="max-width: 150px;" onchange="this.form.submit()">
+                <option value="">Todos los Estados</option>
+                <option value="Activo" {% if estado_filtro == 'Activo' %}selected{% endif %}>Activo</option>
+                <option value="Inactivo" {% if estado_filtro == 'Inactivo' %}selected{% endif %}>Inactivo</option>
+            </select>
+            <button type="submit" class="btn btn-secondary">Buscar</button>
+            {% if query or estado_filtro %}
+            <a href="{% url 'odontologo_lista' %}" class="btn btn-outline" title="Limpiar búsqueda">Limpiar</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>Odontólogo(a)</th>
+                    <th>N° Colegiatura</th>
+                    <th>Especialidad</th>
+                    <th>Teléfono</th>
+                    <th>Correo Electrónico</th>
+                    <th>Estado</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in page_obj %}
+                <tr>
+                    <td>
+                        <div class="patient-cell-group">
+                            <div class="table-avatar-circle" style="background: #F0FDF4; color: #15803D; border-color: #BBF7D0;">
+                                {{ o.nombres|make_list|first|upper }}{{ o.apellidos|make_list|first|upper }}
+                            </div>
+                            <div class="patient-cell-details">
+                                <strong style="color: var(--text-main); font-size: 0.92rem;">Dr(a). {{ o.nombre_completo }}</strong>
+                                <span class="patient-cell-sub">COP {{ o.numero_colegiatura }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><strong>{{ o.numero_colegiatura }}</strong></td>
+                    <td>
+                        <span class="badge" style="background: #EDF9F5; color: #103F3D; border: 1px solid #93EBC6;">
+                            {{ o.especialidad.nombre }}
+                        </span>
+                    </td>
+                    <td>{{ o.telefono }}</td>
+                    <td>{{ o.correo }}</td>
+                    <td>
+                        <span class="badge badge-{{ o.estado|lower }}">{{ o.estado }}</span>
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="table-actions-cluster">
+                            <a href="{% url 'odontologo_editar' o.pk %}" class="btn-table-action" title="Editar Odontólogo">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </a>
+                            <a href="{% url 'odontologo_eliminar' o.pk %}" class="btn-table-action" style="color: #DC2626;" title="Eliminar Odontólogo">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="table-empty-cell">
+                        <div class="empty-state-inner">
+                            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <p>No se encontraron odontólogos con los criterios seleccionados.</p>
+                            <a href="{% url 'odontologo_crear' %}" class="btn btn-primary btn-sm">+ Registrar Odontólogo</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        <div>Mostrando página <strong>{{ page_obj.number }}</strong> de {{ page_obj.paginator.num_pages }}</div>
+        <div class="pagination-controls">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}" class="btn btn-outline btn-sm">&laquo; Anterior</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}" class="btn btn-outline btn-sm">Siguiente &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

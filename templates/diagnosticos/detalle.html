@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle del Diagnóstico #{{ diagnostico.id }}{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'diagnostico_lista' %}" style="color: inherit;">Diagnósticos</a> / Detalle #{{ diagnostico.id }}
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            </div>
+            <div>
+                <h2 class="card-title">Diagnóstico Clínico #{{ diagnostico.id }}</h2>
+                <div class="card-subtitle">Fecha de atención: {{ diagnostico.fecha|date:"d/m/Y" }} &bull; Cita vinculada #{{ diagnostico.cita.id }}</div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 0.65rem; flex-wrap: wrap;">
+            <a href="{% url 'tratamiento_crear' %}?diagnostico={{ diagnostico.pk }}" class="btn btn-primary btn-sm">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>+ Tratamiento</span>
+            </a>
+            <a href="{% url 'receta_crear' %}?diagnostico={{ diagnostico.pk }}" class="btn btn-secondary btn-sm">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>+ Emitir Receta</span>
+            </a>
+            <a href="{% url 'diagnostico_editar' diagnostico.pk %}" class="btn btn-outline btn-sm">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                <span>Editar</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Resumen del Paciente y Cita -->
+    <div class="detail-grid">
+        <div>
+            <div class="detail-item-label">Paciente Evaluado</div>
+            <div class="detail-item-value">
+                <a href="{% url 'paciente_detalle' diagnostico.cita.paciente.pk %}" class="table-link-highlight">
+                    {{ diagnostico.cita.paciente.nombre_completo }}
+                </a>
+            </div>
+            <small style="color: var(--text-muted);">DNI: {{ diagnostico.cita.paciente.dni }}</small>
+        </div>
+        <div>
+            <div class="detail-item-label">Odontólogo Tratante</div>
+            <div class="detail-item-value">Dr(a). {{ diagnostico.cita.odontologo.nombre_completo }}</div>
+            <small style="color: var(--primary, #103F3D); font-weight: 600;">{{ diagnostico.cita.odontologo.especialidad.nombre }}</small>
+        </div>
+        <div>
+            <div class="detail-item-label">Motivo Inicial de la Cita</div>
+            <div class="detail-item-value">{{ diagnostico.cita.motivo }}</div>
+        </div>
+        <div>
+            <div class="detail-item-label">Estado de la Consulta</div>
+            <div class="detail-item-value">
+                {% if diagnostico.cita.estado == 'Atendida' %}
+                    <span class="badge badge-success">{{ diagnostico.cita.estado }}</span>
+                {% elif diagnostico.cita.estado == 'Confirmada' %}
+                    <span class="badge badge-primary">{{ diagnostico.cita.estado }}</span>
+                {% else %}
+                    <span class="badge badge-warning">{{ diagnostico.cita.estado }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Diagnóstico y Recomendaciones -->
+    <div style="background: #FAFCFA; padding: 1.5rem 1.6rem; border-radius: 16px; border: 1px solid var(--border-light, #EAEFEA); margin-top: 1rem;">
+        <div style="margin-bottom: 1.25rem;">
+            <div class="detail-item-label" style="color: var(--primary, #103F3D); font-size: 0.8rem;">Hallazgos Clínicos y Diagnóstico</div>
+            <p style="font-size: 1.02rem; color: var(--text-main); margin-top: 0.35rem; line-height: 1.65; font-weight: 500;">
+                {{ diagnostico.descripcion }}
+            </p>
+        </div>
+
+        <div>
+            <div class="detail-item-label" style="color: var(--text-muted); font-size: 0.8rem;">Recomendaciones Terapéuticas e Indicaciones</div>
+            <p style="font-size: 0.93rem; color: var(--text-secondary); margin-top: 0.35rem; line-height: 1.6;">
+                {{ diagnostico.recomendaciones|default:"Sin recomendaciones clínicas adicionales registradas." }}
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- PLANES DE TRATAMIENTO ASOCIADOS -->
+<div class="card">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+            </div>
+            <div>
+                <h3 class="card-title">Planes de Tratamiento Derivados</h3>
+                <div class="card-subtitle">Procedimientos programados para este diagnóstico (Total: {{ tratamientos.count }})</div>
+            </div>
+        </div>
+        <a href="{% url 'tratamiento_crear' %}?diagnostico={{ diagnostico.pk }}" class="btn btn-outline btn-sm">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Nuevo Tratamiento</span>
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>Tratamiento</th>
+                    <th>Procedimiento / Descripción</th>
+                    <th>Periodo de Atención</th>
+                    <th>Costo Presupuestado</th>
+                    <th>Estado</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in tratamientos %}
+                <tr>
+                    <td><strong style="color: var(--text-main); font-size: 0.95rem;">{{ t.nombre }}</strong></td>
+                    <td><span style="font-size: 0.88rem; color: var(--text-secondary);">{{ t.descripcion|truncatechars:45 }}</span></td>
+                    <td>
+                        <span style="font-size: 0.85rem; color: var(--text-secondary);">
+                            <strong>{{ t.fecha_inicio|date:"d/m/Y" }}</strong> &rarr; {{ t.fecha_fin|date:"d/m/Y" }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge" style="background: #EDF9F5; color: #103F3D; border: 1px solid #93EBC6; font-weight: 800;">
+                            S/. {{ t.costo }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if t.estado == 'Finalizado' %}
+                            <span class="badge badge-success">{{ t.estado }}</span>
+                        {% elif t.estado == 'En proceso' %}
+                            <span class="badge badge-primary">{{ t.estado }}</span>
+                        {% else %}
+                            <span class="badge badge-warning">{{ t.estado }}</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="table-actions-cluster">
+                            <a href="{% url 'tratamiento_editar' t.pk %}" class="btn-action-round" title="Editar tratamiento">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state-cell">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                            <p>No se han registrado procedimientos terapéuticos para este diagnóstico.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- RECETAS PRESCRITAS -->
+<div class="card">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.5 20.5 4 14l10-10a4.95 4.95 0 1 1 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+            </div>
+            <div>
+                <h3 class="card-title">Prescripción de Medicamentos (Recetas)</h3>
+                <div class="card-subtitle">Medicamentos e indicaciones asociadas (Total: {{ recetas.count }})</div>
+            </div>
+        </div>
+        <a href="{% url 'receta_crear' %}?diagnostico={{ diagnostico.pk }}" class="btn btn-outline btn-sm">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Emitir Receta</span>
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>Medicamento</th>
+                    <th>Dosis</th>
+                    <th>Frecuencia</th>
+                    <th>Duración</th>
+                    <th>Indicaciones Clínicas</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in recetas %}
+                <tr>
+                    <td><strong style="color: var(--primary, #103F3D); font-size: 0.95rem;">{{ r.medicamento }}</strong></td>
+                    <td><span style="font-weight: 600;">{{ r.dosis }}</span></td>
+                    <td><span style="color: var(--text-secondary);">{{ r.frecuencia }}</span></td>
+                    <td><span class="badge badge-info">{{ r.duracion }}</span></td>
+                    <td><span style="font-size: 0.85rem; color: var(--text-secondary);">{{ r.indicaciones|default:"Sin especificaciones adicionales" }}</span></td>
+                    <td style="text-align: right;">
+                        <div class="table-actions-cluster">
+                            <a href="{% url 'receta_editar' r.pk %}" class="btn-action-round" title="Editar receta">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">
+                        <div class="empty-state-cell">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.5 20.5 4 14l10-10a4.95 4.95 0 1 1 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+                            <p>No se han emitido recetas farmacológicas en esta consulta.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

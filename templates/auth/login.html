@@ -1,0 +1,131 @@
+{% extends 'base_auth.html' %}
+
+{% block title %}Iniciar Sesión{% endblock %}
+{% block form_title %}Iniciar Sesión{% endblock %}
+{% block form_subtitle %}Ingresa con tu cuenta para gestionar citas y revisar el historial clínico.{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'login' %}" novalidate class="tooth-form">
+    {% csrf_token %}
+    
+    <!-- Campo Usuario -->
+    <div class="tooth-input-group">
+        <label class="tooth-label" for="{{ form.username.id_for_label }}">
+            <span>Usuario o Correo</span>
+        </label>
+        <div class="tooth-field-box {% if form.username.errors %}has-error{% endif %}">
+            <span class="field-leading-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </span>
+            {{ form.username }}
+        </div>
+    </div>
+
+    <!-- Campo Contraseña con botón de alternar visibilidad -->
+    <div class="tooth-input-group">
+        <label class="tooth-label" for="{{ form.password.id_for_label }}">
+            <span>Contraseña</span>
+        </label>
+        <div class="tooth-field-box with-action {% if form.password.errors %}has-error{% endif %}">
+            <span class="field-leading-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            {{ form.password }}
+            <button type="button" class="field-trailing-btn" onclick="togglePassword('{{ form.password.id_for_label }}', this)" tabindex="-1" title="Ver / Ocultar contraseña" aria-label="Ver u ocultar contraseña">
+                <svg class="eye-open" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="eye-closed" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" style="display: none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Fila de opciones: Mantener sesión (izquierda) -->
+    <div class="tooth-meta-row">
+        <label class="tooth-checkbox-label" for="{{ form.mantener_sesion.id_for_label }}">
+            {{ form.mantener_sesion }}
+            <span>{{ form.mantener_sesion.label }}</span>
+        </label>
+    </div>
+
+    <!-- Mensaje de Notificación (arriba del botón Iniciar Sesión, sin icono) -->
+    <div class="tooth-messages-wrapper" id="auth-messages" {% if not messages %}style="display: none;"{% endif %}>
+        {% if messages %}
+            {% for message in messages %}
+            <div class="tooth-alert tooth-alert-{{ message.tags }}">
+                <span class="alert-content">{{ message }}</span>
+            </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Botón Principal: Verde Pino Oscuro #103F3D -->
+    <button type="submit" class="btn-tooth-submit" id="btn-login-submit">
+        <span>Iniciar Sesión</span>
+    </button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.querySelector('form.tooth-form');
+        if (!loginForm) return;
+
+        loginForm.addEventListener('submit', function(e) {
+            let hasEmpty = false;
+            const uInput = document.getElementById('{{ form.username.id_for_label }}');
+            const pInput = document.getElementById('{{ form.password.id_for_label }}');
+
+            [uInput, pInput].forEach(function(inp) {
+                if (inp) {
+                    const box = inp.closest('.tooth-field-box');
+                    if (!inp.value.trim()) {
+                        hasEmpty = true;
+                        if (box) box.classList.add('has-error');
+                    } else {
+                        if (box) box.classList.remove('has-error');
+                    }
+                }
+            });
+
+            if (hasEmpty) {
+                e.preventDefault();
+                const msgBox = document.getElementById('auth-messages');
+                if (msgBox) {
+                    msgBox.style.display = 'block';
+                    msgBox.style.opacity = '1';
+                    msgBox.style.transform = 'none';
+                    msgBox.innerHTML = '<div class="tooth-alert tooth-alert-error"><span class="alert-content">Credenciales incorrectas. Verifique su usuario y contraseña.</span></div>';
+                    scheduleAlertDismiss(msgBox);
+                }
+            }
+        });
+
+        // Si hay una alerta de error cargada, marcar campos en rojo
+        if (document.querySelector('.tooth-alert-error')) {
+            const uInput = document.getElementById('{{ form.username.id_for_label }}');
+            const pInput = document.getElementById('{{ form.password.id_for_label }}');
+            if (uInput) uInput.closest('.tooth-field-box')?.classList.add('has-error');
+            if (pInput) pInput.closest('.tooth-field-box')?.classList.add('has-error');
+        }
+
+        // Limpiar marco rojo al escribir
+        loginForm.querySelectorAll('input').forEach(function(input) {
+            input.addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    const box = this.closest('.tooth-field-box');
+                    if (box) box.classList.remove('has-error');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+{% block auth_footer %}
+<div class="tooth-divider">
+    <span>o</span>
+</div>
+
+<div class="tooth-switch-section">
+    <span>¿Nuevo en el consultorio?</span>
+    <a href="{% url 'registro' %}" class="tooth-switch-link">Crear una cuenta</a>
+</div>
+{% endblock %}

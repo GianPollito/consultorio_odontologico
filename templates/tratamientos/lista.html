@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block title %}Planes de Tratamiento{% endblock %}
+{% block breadcrumb %}Tratamientos Odontológicos{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+            </div>
+            <div>
+                <h2 class="card-title">Planes de Tratamiento Odontológico</h2>
+                <div class="card-subtitle">Procedimientos clínicos programados, en curso y finalizados &bull; {{ total_registros }} tratamientos</div>
+            </div>
+        </div>
+        <a href="{% url 'tratamiento_crear' %}" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Nuevo Tratamiento</span>
+        </a>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filter-bar">
+        <form method="get" action="{% url 'tratamiento_lista' %}" class="search-box">
+            <div class="search-box-inner">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" name="q" value="{{ query }}" placeholder="Buscar por tratamiento, paciente o DNI..." class="form-input">
+            </div>
+            <select name="estado" class="form-select" style="max-width: 170px;" onchange="this.form.submit()">
+                <option value="">Todos los Estados</option>
+                <option value="Pendiente" {% if estado_filtro == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                <option value="En proceso" {% if estado_filtro == 'En proceso' %}selected{% endif %}>En proceso</option>
+                <option value="Finalizado" {% if estado_filtro == 'Finalizado' %}selected{% endif %}>Finalizado</option>
+            </select>
+            <button type="submit" class="btn btn-secondary">Buscar</button>
+            {% if query or estado_filtro %}
+            <a href="{% url 'tratamiento_lista' %}" class="btn btn-outline" title="Limpiar filtros">Limpiar</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>Procedimiento / Tratamiento</th>
+                    <th>Paciente</th>
+                    <th>Odontólogo</th>
+                    <th>Periodo de Atención</th>
+                    <th>Costo Presupuestado</th>
+                    <th>Estado</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for t in page_obj %}
+                <tr>
+                    <td>
+                        <strong style="color: var(--text-main); font-size: 0.95rem;">{{ t.nombre }}</strong><br>
+                        <small style="color: var(--text-muted);">{{ t.descripcion|default:"Sin observaciones técnicas adicionales"|truncatechars:45 }}</small>
+                    </td>
+                    <td>
+                        <div class="patient-cell-group">
+                            <div class="table-avatar-circle">
+                                {{ t.diagnostico.cita.paciente.nombres|make_list|first|upper }}{{ t.diagnostico.cita.paciente.apellidos|make_list|first|upper }}
+                            </div>
+                            <div class="patient-cell-details">
+                                <a href="{% url 'paciente_detalle' t.diagnostico.cita.paciente.pk %}" class="table-link-highlight">
+                                    {{ t.diagnostico.cita.paciente.nombre_completo }}
+                                </a>
+                                <span class="patient-cell-sub">DNI: {{ t.diagnostico.cita.paciente.dni }}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-size: 0.88rem; color: var(--text-secondary); font-weight: 500;">
+                            Dr(a). {{ t.diagnostico.cita.odontologo.nombre_completo }}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                            <strong>{{ t.fecha_inicio|date:"d/m/Y" }}</strong> &rarr; {{ t.fecha_fin|date:"d/m/Y" }}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge" style="background: #EDF9F5; color: #103F3D; border: 1px solid #93EBC6; font-size: 0.82rem; font-weight: 800;">
+                            S/. {{ t.costo }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-{{ t.estado|slugify }}">{{ t.estado }}</span>
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="table-actions-cluster">
+                            <a href="{% url 'tratamiento_editar' t.pk %}" class="btn-table-action" title="Editar Tratamiento">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </a>
+                            <a href="{% url 'tratamiento_eliminar' t.pk %}" class="btn-table-action" style="color: #DC2626;" title="Eliminar Tratamiento">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="table-empty-cell">
+                        <div class="empty-state-inner">
+                            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                            <p>No se encontraron tratamientos con los filtros aplicados.</p>
+                            <a href="{% url 'tratamiento_crear' %}" class="btn btn-primary btn-sm">+ Registrar Tratamiento</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        <div>Mostrando página <strong>{{ page_obj.number }}</strong> de {{ page_obj.paginator.num_pages }}</div>
+        <div class="pagination-controls">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}" class="btn btn-outline btn-sm">&laquo; Anterior</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if estado_filtro %}&estado={{ estado_filtro }}{% endif %}" class="btn btn-outline btn-sm">Siguiente &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

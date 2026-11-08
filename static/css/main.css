@@ -1,0 +1,31 @@
+/* ==========================================================================
+   SONRISA PERFECTA - ARCHIVO MAESTRO DE ESTILOS CSS
+   Organización Modular por Módulos y Componentes (Sin Bootstrap)
+   ========================================================================== */
+
+/* 01. Variables globales, reset y tipografía base de 16px */
+@import url('base.css');
+
+/* 02. Layout, estructura, sidebar y barras de navegación */
+@import url('layout.css');
+
+/* 03. Componentes reutilizables: botones, cards, tablas, badges y alertas */
+@import url('components.css');
+
+/* 04. Formularios, controles y validaciones */
+@import url('forms.css');
+
+/* 05. Módulo de autenticación: Login y Registro */
+@import url('auth.css');
+
+/* 06. Módulo del Dashboard e indicadores KPI */
+@import url('dashboard.css');
+
+/* 07. Módulo de Pacientes e Historial Clínico */
+@import url('pacientes.css');
+
+/* 08. Módulo de Reportes, Impresión y Exportación a PDF */
+@import url('print.css');
+
+/* 09. Diseño adaptable y Media Queries responsivas */
+@import url('responsive.css');

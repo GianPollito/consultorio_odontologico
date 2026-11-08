@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+{% block breadcrumb %}
+<a href="{% url 'especialidad_lista' %}" style="color: inherit;">Especialidades</a> / {{ titulo }}
+{% endblock %}
+
+{% block content %}
+<div class="form-card-container" style="max-width: 720px;">
+    <div class="card-header" style="margin-bottom: 2rem;">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div>
+                <h2 class="card-title">{{ titulo }}</h2>
+                <div class="card-subtitle">Área de atención y descripción clínica de la especialidad</div>
+            </div>
+        </div>
+        <a href="{% url 'especialidad_lista' %}" class="btn btn-secondary btn-sm">Volver al Listado</a>
+    </div>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-error" style="margin-bottom: 1.5rem;">
+            {{ form.non_field_errors.0 }}
+        </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label class="form-label" for="{{ form.nombre.id_for_label }}">
+                {{ form.nombre.label }} <span class="required">*</span>
+            </label>
+            {{ form.nombre }}
+            {% if form.nombre.errors %}<div class="form-error">{{ form.nombre.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="{{ form.descripcion.id_for_label }}">
+                {{ form.descripcion.label }} <span class="required">*</span>
+            </label>
+            {{ form.descripcion }}
+            {% if form.descripcion.errors %}<div class="form-error">{{ form.descripcion.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-group" style="max-width: 300px;">
+            <label class="form-label" for="{{ form.estado.id_for_label }}">
+                {{ form.estado.label }} <span class="required">*</span>
+            </label>
+            {{ form.estado }}
+            {% if form.estado.errors %}<div class="form-error">{{ form.estado.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-actions-footer">
+            <a href="{% url 'especialidad_lista' %}" class="btn btn-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>{{ boton_texto }}</span>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

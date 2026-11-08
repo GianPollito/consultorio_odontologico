@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Especialidades Odontológicas{% endblock %}
+{% block breadcrumb %}Especialidades{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="header-title-container">
+            <div class="header-icon-badge">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div>
+                <h2 class="card-title">Catálogo de Especialidades Clínicas</h2>
+                <div class="card-subtitle">Áreas y disciplinas odontológicas de atención &bull; {{ total_registros }} especialidades</div>
+            </div>
+        </div>
+        <a href="{% url 'especialidad_crear' %}" class="btn btn-primary">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Nueva Especialidad</span>
+        </a>
+    </div>
+
+    <!-- Buscador -->
+    <div class="filter-bar">
+        <form method="get" action="{% url 'especialidad_lista' %}" class="search-box">
+            <div class="search-box-inner">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" name="q" value="{{ query }}" placeholder="Buscar especialidad o descripción clínica..." class="form-input">
+            </div>
+            <button type="submit" class="btn btn-secondary">Buscar</button>
+            {% if query %}<a href="{% url 'especialidad_lista' %}" class="btn btn-outline" title="Limpiar búsqueda">Limpiar</a>{% endif %}
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom">
+            <thead>
+                <tr>
+                    <th>Nombre de Especialidad</th>
+                    <th>Descripción</th>
+                    <th>Odontólogos Asignados</th>
+                    <th>Estado</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for e in page_obj %}
+                <tr>
+                    <td>
+                        <strong style="color: var(--text-main); font-size: 0.95rem;">{{ e.nombre }}</strong>
+                    </td>
+                    <td><span style="font-size: 0.88rem; color: var(--text-muted);">{{ e.descripcion|default:"Sin descripción detallada" }}</span></td>
+                    <td>
+                        <span class="badge" style="background: #EDF9F5; color: #103F3D; border: 1px solid #93EBC6;">
+                            {{ e.odontologos.count }} especialistas
+                        </span>
+                    </td>
+                    <td><span class="badge badge-{{ e.estado|lower }}">{{ e.estado }}</span></td>
+                    <td style="text-align: right;">
+                        <div class="table-actions-cluster">
+                            <a href="{% url 'especialidad_editar' e.pk %}" class="btn-table-action" title="Editar Especialidad">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </a>
+                            <a href="{% url 'especialidad_eliminar' e.pk %}" class="btn-table-action" style="color: #DC2626;" title="Eliminar Especialidad">
+                                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="table-empty-cell">
+                        <div class="empty-state-inner">
+                            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                            <p>No hay especialidades registradas en el catálogo.</p>
+                            <a href="{% url 'especialidad_crear' %}" class="btn btn-primary btn-sm">+ Registrar Especialidad</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        <div>Mostrando página <strong>{{ page_obj.number }}</strong> de {{ page_obj.paginator.num_pages }}</div>
+        <div class="pagination-controls">
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}" class="btn btn-outline btn-sm">&laquo; Anterior</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}" class="btn btn-outline btn-sm">Siguiente &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

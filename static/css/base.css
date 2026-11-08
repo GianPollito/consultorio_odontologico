@@ -1,0 +1,110 @@
+/* ==========================================================================
+   01. SISTEMA DE DISEÑO STRIPE / APPLE HEALTH - BASE Y VARIABLES
+   Archivo: static/css/base.css
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --font-base: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-serif: 'Playfair Display', 'DM Serif Display', Georgia, serif;
+    --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    /* Paleta Exacta Figma ToothTrackr Dental UI Kit */
+    --primary: #103F3D;          /* Verde Pino Dental Exacto */
+    --primary-hover: #0B2F2E;
+    --primary-dark: #072221;
+    --primary-light: #EDF9F5;    /* Menta Suave */
+    --primary-subtle: #93EBC6;   /* Punto Menta del Logo */
+    --accent: #438983;           /* Borde de Foco / Acento Dental */
+
+    /* Superficies Claras y Pulcras */
+    --bg-body: #F4F6F5;          /* Fondo Tiza Salvia Exacto */
+    --bg-card: #FFFFFF;          /* Blanco Puro */
+    --bg-subtle: #E8EFEA;
+    --bg-hover: #EEF4F0;
+    --border: #D5E0DC;           /* Borde Tenue de Cajas */
+    --border-light: #EAEFEA;
+    --border-focus: #438983;     /* Borde de Enfoque con Halo */
+    
+    /* Tipografía Refinada */
+    --text-main: #102B27;        /* Carbón Pino */
+    --text-secondary: #3D5A52;   /* Salvia Oscuro */
+    --text-muted: #5A716A;       /* Salvia Desaturado */
+    --text-light: #8FA39D;
+    --text-white: #FFFFFF;
+
+    /* Semántica Sutil (Pasteles de Lujo) */
+    --success: #10B981;
+    --success-bg: #ECFDF5;
+    --success-text: #065F46;
+    --success-border: #A7F3D0;
+
+    --warning: #F59E0B;
+    --warning-bg: #FFFBEB;
+    --warning-text: #92400E;
+    --warning-border: #FDE68A;
+
+    --danger: #EF4444;
+    --danger-bg: #FEF2F2;
+    --danger-text: #991B1B;
+    --danger-border: #FECACA;
+
+    --info: #3B82F6;
+    --info-bg: #EFF6FF;
+    --info-text: #1E40AF;
+    --info-border: #BFDBFE;
+
+    /* Radios y Sombras Difusas Casi Imperceptibles */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-full: 9999px;
+
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -2px rgba(0, 0, 0, 0.02);
+    --shadow-lg: 0 10px 25px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -4px rgba(0, 0, 0, 0.02);
+    --shadow-card: 0 0 0 1px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(0, 0, 0, 0.04);
+    
+    --transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tipografía Base Requerida: 16px */
+html {
+    font-size: 16px;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-base);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: -0.012em;
+    color: var(--text-main);
+    background-color: var(--bg-body);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
